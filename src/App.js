@@ -3,6 +3,7 @@ import { Jhon } from './Presentaciones/Jhon';
 import { Smith } from './Presentaciones/Smith';
 import { Yuliana } from './Presentaciones/Yuliana';
 import { Julio } from './Presentaciones/Julio';
+import { Juan } from './Presentaciones/Juan';
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
       <Smith />
       <Julio />
       <Jhon />
+      <Juan />
     </div>
   );
 }
