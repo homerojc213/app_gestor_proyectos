@@ -1,4 +1,5 @@
 import './App.css';
+import { Jhon } from './Presentaciones/Jhon';
 import { Smith } from './Presentaciones/Smith';
 import { Yuliana } from './Presentaciones/Yuliana';
 import { Julio } from './Presentaciones/Julio';
@@ -12,6 +13,7 @@ function App() {
       <Yuliana />
       <Smith />
       <Julio />
+      <Jhon />
     </div>
   );
 }
