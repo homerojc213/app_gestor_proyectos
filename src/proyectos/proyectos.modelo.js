@@ -1,7 +1,33 @@
-import React, { useState } from "react";
-import insertOne from '../mongo/script';
+import { useState } from "react";
+
+const insertOne = (proyecto) => {
+    fetch("http://localhost:3010/proyectos", {
+        method: "post",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            idProyecto: proyecto.idProyecto,
+            nombreProyecto: proyecto.nombreProyecto,
+            objetivoGeneral: proyecto.objetivoGeneral,
+            objetivosEspecificos: proyecto.objetivosEspecificos,
+            presupuesto: proyecto.presupuesto,
+            fechaInicio: proyecto.fechaInicio,
+            fechaFin: proyecto.fechaFin,
+            identificacionLider: proyecto.identificacionLider,
+            nombreLider: proyecto.nombreLider,
+            estadoProyecto: proyecto.estadoProyecto,
+            fase: proyecto.fase
+        })
+    })
+        .then(
+            res => res.json()
+        )
+}
 
 const Proyectos = () => {
+
     let proyecto = {
         idProyecto: "",
         nombreProyecto: "",
@@ -12,7 +38,7 @@ const Proyectos = () => {
         fechaFin: "",
         identificacionLider: "",
         nombreLider: "",
-        estadoProeycto: "",
+        estadoProyecto: "",
         fase: ""
     }
     const [proyectos, setProyectos] = useState({
@@ -31,27 +57,27 @@ const Proyectos = () => {
 
     const handleChange = (e) => {
         // proyecto = {[e.target.name]: (proyecto[e.target.name]  + e.target.value) }
-        
+
         proyecto[e.target.name] += e.target.value;
-        console.log(proyectos);
-        setProyectos({
-            ...proyectos,[e.target.name]: proyecto[e.target.name]
-        });
         
+        setProyectos({
+            ...proyectos, [e.target.name]: proyecto[e.target.name]
+        });
+        console.log(proyectos);
     }
     const guardarProyecto = () => {
-        insertOne(proyectos,'Proyectos');
+        insertOne(proyectos);
         proyecto = {
             idProyecto: "",
             nombreProyecto: "",
             objetivoGeneral: "",
             objetivosEspecificos: [],
-            presupuesto: 0,
+            presupuesto: "",
             fechaInicio: "",
             fechaFin: "",
             identificacionLider: "",
             nombreLider: "",
-            estadoProeycto: "",
+            estadoProyecto: "",
             fase: ""
         }
         setProyectos(proyecto);
@@ -67,7 +93,7 @@ const Proyectos = () => {
                     value={proyectos.idProyecto}
                     type="number"
                     onChange={handleChange}
-                    required
+
                 />
                 <br /><br />
 
@@ -77,8 +103,8 @@ const Proyectos = () => {
                     value={proyectos.nombreProyecto}
                     type="text"
                     onChange={handleChange}
-                    required
-                    />
+
+                />
                 <br /><br />
 
                 <label>Objetivo general:</label>
@@ -87,8 +113,8 @@ const Proyectos = () => {
                     value={proyectos.objetivoGeneral}
                     type="text"
                     onChange={handleChange}
-                    required
-                    />
+
+                />
                 <br /><br />
 
                 <label>Objetivo especificos:</label>
@@ -97,8 +123,8 @@ const Proyectos = () => {
                     value={proyectos.objetivosEspecificos}
                     type="text"
                     onChange={handleChange}
-                    required
-                    />
+
+                />
                 <br /><br />
 
                 <label>Presupuesto:</label>
@@ -107,8 +133,8 @@ const Proyectos = () => {
                     value={proyectos.presupuesto}
                     type="number"
                     onChange={handleChange}
-                    required
-                    />
+
+                />
                 <br /><br />
 
                 <label>Fecha de inicio:</label>
@@ -117,8 +143,8 @@ const Proyectos = () => {
                     value={proyectos.fechaInicio}
                     type="date"
                     onChange={handleChange}
-                    required
-                    />
+
+                />
                 <br /><br />
 
                 <label>Fecha de finalizacion:</label>
@@ -127,8 +153,8 @@ const Proyectos = () => {
                     value={proyectos.fechaFin}
                     type="date"
                     onChange={handleChange}
-                    required
-                    />
+
+                />
                 <br /><br />
 
                 <label>N de identificacion del lider:</label>
@@ -136,9 +162,9 @@ const Proyectos = () => {
                     name="identificacionLider"
                     value={proyectos.identificacionLider}
                     type="number"
-                    onChange={handleChange} 
-                    required
-                    />
+                    onChange={handleChange}
+
+                />
                 <br /><br />
 
                 <label>Nombre del lider:</label>
@@ -146,17 +172,18 @@ const Proyectos = () => {
                     name="nombreLider"
                     value={proyectos.nombreLider}
                     type="text"
-                    onChange={handleChange} 
-                    required
-                    />
+                    onChange={handleChange}
+                />
                 <br /><br />
 
                 <label>Estado:</label>
                 <input
-                    name="estado"
+                    name="estadoProyecto"
                     value={proyectos.estadoProyecto}
-                    onChange={handleChange}
                     type="text"
+                    onChange={handleChange}
+
+
                 />
                 <br /><br />
 
@@ -166,7 +193,7 @@ const Proyectos = () => {
                     value={proyectos.fase}
                     onChange={handleChange}
                     type="text"
-                    required
+
                 />
                 <br /><br />
 
