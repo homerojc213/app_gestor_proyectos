@@ -54,7 +54,7 @@ Proyecto.findAll = async (resultado) => {
 Proyecto.updateOne = async (idProyecto, proyecto, resultado) => {
     try {
         const collection = client.db("App_Gestor_Proyectos").collection(`Proyectos`);
-        const proyectoUpdate = await collection.updateOne({ idProyecto: idProyecto }, {$set: proyecto});
+        const proyectoUpdate = await collection.updateOne({ idProyecto: parseInt(idProyecto,10) }, {$set: proyecto});
         console.log(proyectoUpdate);
         resultado(null, proyectoUpdate);
     } catch (error) {
