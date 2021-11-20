@@ -29,11 +29,11 @@ const insertOne = (proyecto) => {
 const Proyectos = () => {
 
     let proyecto = {
-        idProyecto: "",
+        idProyecto: 0,
         nombreProyecto: "",
         objetivoGeneral: "",
         objetivosEspecificos: "",
-        presupuesto: "",
+        presupuesto: 0,
         fechaInicio: "",
         fechaFin: "",
         identificacionLider: "",
@@ -42,11 +42,11 @@ const Proyectos = () => {
         fase: ""
     }
     const [proyectos, setProyectos] = useState({
-        idProyecto: "",
+        idProyecto: 0,
         nombreProyecto: "",
         objetivoGeneral: "",
         objetivosEspecificos: "",
-        presupuesto: "",
+        presupuesto: 0,
         fechaInicio: "",
         fechaFin: "",
         identificacionLider: "",
@@ -68,11 +68,11 @@ const Proyectos = () => {
     const guardarProyecto = () => {
         insertOne(proyectos);
         proyecto = {
-            idProyecto: "",
+            idProyecto: 0,
             nombreProyecto: "",
             objetivoGeneral: "",
             objetivosEspecificos: [],
-            presupuesto: "",
+            presupuesto: 0,
             fechaInicio: "",
             fechaFin: "",
             identificacionLider: "",
