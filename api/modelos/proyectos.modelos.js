@@ -30,7 +30,7 @@ Proyecto.insertOne = async (proyecto, resultado) => {
 Proyecto.findOne = async (idProyecto, resultado) => {
     try {
         const collection = client.db("App_Gestor_Proyectos").collection(`Proyectos`);
-        const proyectoFind = await collection.find({ idProyecto: idProyecto }).toArray();
+        const proyectoFind = await collection.find({ idProyecto: parseInt(idProyecto,10) }).toArray();
         console.log(proyectoFind);
         resultado(null, proyectoFind);
     } catch (error) {
@@ -66,7 +66,7 @@ Proyecto.updateOne = async (idProyecto, proyecto, resultado) => {
 Proyecto.deleteOne = async (idProyecto, resultado) => {
     try {
         const collection = client.db("App_Gestor_Proyectos").collection(`Proyectos`);
-        const proyectoDelete = await collection.deleteOne({idProyecto: idProyecto});
+        const proyectoDelete = await collection.deleteOne({idProyecto: parseInt(idProyecto,10)});
         console.log(proyectoDelete);
         resultado(null, proyectoDelete);
     } catch (error) {
