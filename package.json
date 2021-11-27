@@ -1,0 +1,30 @@
+{
+  "name": "app_gestor_proyectos",
+  "version": "1.0.0",
+  "description": "App para Gestion de Proyectos Ciclo 4",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/homerojc213/app_gestor_proyectos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/homerojc213/app_gestor_proyectos/issues"
+  },
+  "homepage": "https://github.com/homerojc213/app_gestor_proyectos#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.7.2",
+    "graphql-tools": "^8.2.0",
+    "mongodb": "^4.2.0",
+    "mongoose": "^6.0.13",
+    "nodemon": "^2.0.15"
+  }
+}
