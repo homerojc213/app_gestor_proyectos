@@ -1,6 +1,8 @@
 const graphql = require('graphql');
 const Usuario = require('../models/usuario');
 const Proyecto = require('../models/proyecto');
+//const Avances = require('../models/avances');
+//const Inscripciones = require('../models/inscripciones');
 
 const { GraphQLObjectType, GraphQLID, GraphQLString,  GraphQLFloat, GraphQLList, GraphQLSchema} = graphql;
 
@@ -25,7 +27,7 @@ const UsuarioType = new GraphQLObjectType({
 
 });
 
-//Esquema de proyectos
+//Esquema de proyectos, definicion de datos y tipo de datos
 
 const ProyectoType = new GraphQLObjectType({ 
 
@@ -192,15 +194,50 @@ const Mutation = new GraphQLObjectType({
 
                 return proyecto.save();
             }
-        }
+        },
+        modificarProyecto:{ //modificar proyecto
+            type: ProyectoType,
+            args: {
+                id: { type: GraphQLString },
+                nombre: { type: GraphQLString },
+                presupuesto: { type: GraphQLFloat },
+                fechaInicio: { type: GraphQLString },
+                fechaFin: { type: GraphQLString },
+                objGeneral: { type: GraphQLString },
+                objEspecificos: { type: GraphQLList(GraphQLString) },
+                idLider: { type: GraphQLID },
+                estadoProyecto: { type: GraphQLString },
+                fase: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                return Proyecto.findByIdAndUpdate(args.id, {
+                    nombre: args.nombre,
+                    presupuesto: args.presupuesto,
+                    fechaInicio: args.fechaInicio,
+                    fechaFin: args.fechaFin,
+                    objGeneral: args.objGeneral,
+                    objEspecificos: args.objEspecificos,
+                    idLider: args.idLider,
+                    estadoProyecto: args.estadoProyecto,
+                    fase: args.fase
+                });
+            }
+        },
+        eliminarProyecto:{ //eliminar proyecto
+            type: ProyectoType,
+            args: {
+                id: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                return Proyecto.findByIdAndRemove(args.id);
+            }
+        },
     }   
 });
-
 
 
 module.exports = new GraphQLSchema({
     query: RootQuery,
     mutation: Mutation
   });
-
 
