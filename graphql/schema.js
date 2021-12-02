@@ -1,7 +1,7 @@
 const graphql = require('graphql');
 const Usuario = require('../models/usuario');
 const Proyecto = require('../models/proyecto');
-//const Avances = require('../models/avances');
+const Avances = require('../models/avance');
 //const Inscripciones = require('../models/inscripciones');
 
 const { GraphQLObjectType, GraphQLID, GraphQLString,  GraphQLFloat, GraphQLList, GraphQLSchema} = graphql;
@@ -53,6 +53,27 @@ const ProyectoType = new GraphQLObjectType({
 
 });
 
+//Esquema de Avance, definicion de datos y tipo de datos
+
+const AvanceType = new GraphQLObjectType({ 
+
+    name: 'Avance',
+    fields: () => ({
+        id: { type: GraphQLString },
+        descripcion: { type: GraphQLString },
+        fecha_avance : { type: GraphQLString },
+        idProyecto : { 
+            type: ProyectoType,
+            resolve(parent, args){
+                return Proyecto.findById(parent.idProyecto);
+            }
+             },
+        observaciones: { type: GraphQLList(GraphQLString) }
+    })
+
+
+});
+
 
 //Esquema de consultas 
 
@@ -92,6 +113,23 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 return Proyecto.find({});
             }
+        },
+        avances: { //consulta de todos los avances
+            type: new GraphQLList(AvanceType),
+            resolve(parent, args) {
+                return Avances.find({});
+            }
+        },
+        avance:{  //consulta de avance por ID
+            type: AvanceType,
+            args: {
+                id: { //consultamos el avance de acuerdo al id
+                    type: GraphQLString
+                }
+            },
+            resolve(parent, args) { //devolvemos la informacion del proyecto
+                return Avances.findById(args.id);
+            }   
         }
 
     }
@@ -232,6 +270,53 @@ const Mutation = new GraphQLObjectType({
                 return Proyecto.findByIdAndRemove(args.id);
             }
         },
+
+        agregarAvance:{ //agregar Avance
+            type: AvanceType,
+            args: {
+                descripcion: { type: GraphQLString },
+                fecha_avance: { type: GraphQLString },
+                observaciones: { type: GraphQLList(GraphQLString) },
+                idProyecto: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                const avance = new Avances({
+                    descripcion: args.descripcion,
+                    fecha_avance: args.fecha_avance,
+                    observaciones: args.observaciones,
+                    idProyecto: args.idProyecto
+                });
+
+                return avance.save();
+            }
+        },
+        modificarAvance:{ //modificar Avance
+            type: AvanceType,
+            args: {
+                id: { type: GraphQLString },
+                descripcion: { type: GraphQLString },
+                fecha_avance: { type: GraphQLString },
+                observaciones: { type: GraphQLList(GraphQLString) },
+                idProyecto: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                return Avances.findByIdAndUpdate(args.id, {
+                    descripcion: args.descripcion,
+                    fecha_avance: args.fecha_avance,
+                    observaciones: args.observaciones,
+                    idProyecto: args.idProyecto
+                });
+            }
+        },
+        eliminarAvance:{ //eliminar Avance
+            type: AvanceType,
+            args: {
+                id: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                return Avances.findByIdAndRemove(args.id);
+            }
+        }
     }   
 });
 
