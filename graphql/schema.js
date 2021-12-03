@@ -2,6 +2,8 @@ const graphql = require('graphql');
 const Usuario = require('../models/usuario');
 const Proyecto = require('../models/proyecto');
 const Avances = require('../models/avance');
+const Inscripciones = require('../models/inscripcion');
+
 //const Inscripciones = require('../models/inscripciones');
 
 const { GraphQLObjectType, GraphQLID, GraphQLString,  GraphQLFloat, GraphQLList, GraphQLSchema} = graphql;
@@ -74,6 +76,32 @@ const AvanceType = new GraphQLObjectType({
 
 });
 
+//Esquema de Inscripcion, definicion de datos y tipo de datos
+
+const InscripcionType = new GraphQLObjectType({ 
+
+    name: 'Inscripcion',
+    fields: () => ({
+        id: { type: GraphQLString },
+        estadoInscripcion: { type: GraphQLString },
+        fechaIngreso : { type: GraphQLString },
+        idProyecto : { 
+            type: ProyectoType,
+            resolve(parent, args){
+                return Proyecto.findById(parent.idProyecto);
+            }
+             },
+        idEstudiante : { 
+            type: UsuarioType,
+            resolve(parent, args){
+                return Usuario.findById(parent.idEstudiante);
+                 }
+            }
+    })
+
+
+});
+
 
 //Esquema de consultas 
 
@@ -129,6 +157,23 @@ const RootQuery = new GraphQLObjectType({
             },
             resolve(parent, args) { //devolvemos la informacion del proyecto
                 return Avances.findById(args.id);
+            }   
+        },
+        inscripciones: { //consulta de todos las inscripciones
+            type: new GraphQLList(InscripcionType),
+            resolve(parent, args) {
+                return Inscripciones.find({});
+            }
+        },
+        inscripcion:{  //consulta de inscripcion por ID
+            type: InscripcionType,
+            args: {
+                id: { //consultamos el avance de acuerdo al id
+                    type: GraphQLString
+                }
+            },
+            resolve(parent, args) { //devolvemos la informacion del proyecto
+                return Inscripciones.findById(args.id);
             }   
         }
 
@@ -315,6 +360,53 @@ const Mutation = new GraphQLObjectType({
             },
             resolve(parent, args) {
                 return Avances.findByIdAndRemove(args.id);
+            }
+        },
+
+        agregarInscripcion:{ //agregar INSCRIPCION
+            type: InscripcionType,
+            args: {
+                estadoInscripcion: { type: GraphQLString },
+                fechaIngreso: { type: GraphQLString },
+                idEstudiante: { type: GraphQLID },
+                idProyecto: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                const inscripcion = new Inscripciones({
+                    estadoInscripcion: args.estadoInscripcion,
+                    fechaIngreso: args.fechaIngreso,
+                    idEstudiante: args.idEstudiante,
+                    idProyecto: args.idProyecto
+                });
+
+                return inscripcion.save();
+            }
+        },
+        modificarInscripcion:{ //modificar Inscripcion
+            type: InscripcionType,
+            args: {
+                id: { type: GraphQLString },
+                estadoInscripcion: { type: GraphQLString },
+                fechaIngreso: { type: GraphQLString },
+                idEstudiante: { type: GraphQLID },
+                idProyecto: { type: GraphQLID }
+            },
+            resolve(parent, args) {
+                return Inscripciones.findByIdAndUpdate(args.id, {
+                    estadoInscripcion: args.estadoInscripcion,
+                    fechaIngreso: args.fechaIngreso,
+                    idEstudiante: args.idEstudiante,
+                    idProyecto: args.idProyecto
+                });
+            }
+        },
+        eliminarInscripcion:{ //eliminar Inscripcion
+            type: InscripcionType,
+            args: {
+                id: { type: GraphQLString }
+            },
+            resolve(parent, args) {
+                return Inscripciones.findByIdAndRemove(args.id);
             }
         }
     }   
