@@ -10,6 +10,7 @@ const typeDefs = `
         Proyectos: [Proyecto]
         Inscripciones: [Inscripcion]
         Avances: [Avance]
+        Login(correo: String!, clave: String!): String
     }
 
     type Mutation {

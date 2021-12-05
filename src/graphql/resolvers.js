@@ -3,36 +3,79 @@ import Proyecto from '../models/Proyecto';
 import Inscripcion from '../models/Inscripcion';
 import Avance from '../models/Avance';
 
+import bycript from 'bcrypt';
+import { generarJWT } from '../helpers/jwt';
 
 //Para calcular la fecha actual
 const tiempoTranscurrido = Date.now();
 const hoy = new Date(tiempoTranscurrido);
 
+//Para encriptar contraseña
+const salt =  bycript.genSaltSync();
+
 export const resolvers = {
 
     Query: {
-        Usuarios: () => {
-            return Usuario.find();
+        Usuarios: (_, args, context) => {  //Context sirve para inyectar info desde una query a otra, en este caso se usa para validar el token
+            if(context.user.auth) {
+                return Usuario.find();
+            }else{
+                throw new Error('No estas autorizado');
+            } 
         },
-        Proyectos: () => {
-            return Proyecto.find();
+        Proyectos: (_, args, context) => {
+            if(context.user.auth) {
+                return Proyecto.find();
+            }else{
+                throw new Error('No estas autorizado');
+            }
         },
-        Inscripciones: () => {
-            return Inscripcion.find();
+        Inscripciones: (_, args, context) => {
+            if(context.user.auth) {
+                return Inscripcion.find();
+            }else{
+                throw new Error('No estas autorizado');
+            }
         },
-        Avances: () => {
-            return Avance.find();
+        Avances: (_, args, context) => {
+            if(context.user.auth) {
+                return Avance.find();
+            }else{
+                throw new Error('No estas autorizado');
+            }
+        },
+        Login: async (_, { correo, clave}) => {
+
+            const usuario = await Usuario.findOne({ correo });
+
+            if (!usuario) {
+                return "Usuario o contraseña incorrectos";
+            }
+
+            const valido = bycript.compareSync(clave, usuario.clave); //comparando con la contraseña encriptada
+
+            if (valido) {
+                const token = await generarJWT(usuario.id, usuario.nombre);
+                return token;
+                
+            }else{
+                return "Usuario o contraseña incorrectos";
+            }
+   
+
         }
+            
 
     },
     Mutation: {
         async agregarUsuario( _, { usuario }){
+
             const nusuario = new Usuario({
                 nombres: usuario.nombres,
                 apellidos: usuario.apellidos,
                 identificacion: usuario.identificacion,
                 correo: usuario.correo,
-                clave: usuario.clave,
+                clave: bycript.hashSync(usuario.clave, salt),
                 rol: usuario.rol,
                 estado: "Inactivo"
             });
@@ -46,7 +89,7 @@ export const resolvers = {
                 apellidos: usuario.apellidos,
                 identificacion: usuario.identificacion,
                 correo: usuario.correo,
-                clave: usuario.clave,
+                clave: bycript.hashSync(usuario.clave, salt),
                 rol: usuario.rol
             });
 
@@ -62,6 +105,7 @@ export const resolvers = {
         },
 
         async agregarProyecto( _, { proyecto }){
+
             const nproyecto = new Proyecto({
                 nombre: proyecto.nombre,
                 presupuesto: proyecto.presupuesto,
