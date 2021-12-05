@@ -68,135 +68,234 @@ export const resolvers = {
 
     },
     Mutation: {
-        async agregarUsuario( _, { usuario }){
+        async agregarUsuario( _, { usuario }, context) {
 
-            const nusuario = new Usuario({
-                nombres: usuario.nombres,
-                apellidos: usuario.apellidos,
-                identificacion: usuario.identificacion,
-                correo: usuario.correo,
-                clave: bycript.hashSync(usuario.clave, salt),
-                rol: usuario.rol,
-                estado: "Inactivo"
-            });
-
-            return await nusuario.save();
+            if(context.user.auth) {
+                const nusuario = new Usuario({
+                    nombres: usuario.nombres,
+                    apellidos: usuario.apellidos,
+                    identificacion: usuario.identificacion,
+                    correo: usuario.correo,
+                    clave: bycript.hashSync(usuario.clave, salt),
+                    rol: usuario.rol,
+                    estado: "Inactivo"
+                });
+    
+                return await nusuario.save();
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
         },
-        async actualizarUsuario( _, { id, usuario }){
+        async actualizarUsuario( _, { id, usuario }, context) {
 
-            return await Usuario.findByIdAndUpdate(id, {
-                nombres: usuario.nombres,
-                apellidos: usuario.apellidos,
-                identificacion: usuario.identificacion,
-                correo: usuario.correo,
-                clave: bycript.hashSync(usuario.clave, salt),
-                rol: usuario.rol
-            });
+            if(context.user.auth) {
+
+                return await Usuario.findByIdAndUpdate(id, {
+                    nombres: usuario.nombres,
+                    apellidos: usuario.apellidos,
+                    identificacion: usuario.identificacion,
+                    correo: usuario.correo,
+                    clave: bycript.hashSync(usuario.clave, salt),
+                    rol: usuario.rol
+                });
+            }else{
+                throw new Error('No estas autorizado');
+            }
 
         },
-        async actualizarEstadoUsuario( _, { id, estado }){
-            return await Usuario.findByIdAndUpdate(id, {
-                estado: estado
-            });
-        },
+        async actualizarEstadoUsuario( _, { id, estado }, context) {
 
-        async eliminarUsuario( _, { id }){
-            return await Usuario.findByIdAndDelete(id);
-        },
+            if(context.user.auth) {
+                return await Usuario.findByIdAndUpdate(id, {
+                    estado: estado
+                });
+            }else{
+                throw new Error('No estas autorizado');
+            }
 
-        async agregarProyecto( _, { proyecto }){
-
-            const nproyecto = new Proyecto({
-                nombre: proyecto.nombre,
-                presupuesto: proyecto.presupuesto,
-                fechaInicio: "",
-                fechaFin: "",
-                objGeneral: proyecto.objGeneral,
-                objEspecificos: proyecto.objEspecifico,
-                idLider: proyecto.idLider,
-                estadoProyecto: "Inactivo",
-                fase: ""
-            });
-
-            return await nproyecto.save();
+            
         },
 
-        async terminarProyecto( _, { id }){
-            return await Proyecto.findByIdAndUpdate(id, {
-                fechaFin: hoy.toLocaleDateString(),
-                estadoProyecto: "Terminado"
-            });
+        async eliminarUsuario( _, { id }, context) {
+
+            if(context.user.auth) {
+                return await Usuario.findByIdAndDelete(id);
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
         },
 
-        async aprobarProyecto( _, {id}){
-            return await Proyecto.findByIdAndUpdate(id, {
-                fechaInicio: hoy.toLocaleString(),
-                estadoProyecto: "Activo",
-                fase: "Inicio"
-            })
+        async agregarProyecto( _, { proyecto }, context) {
+
+            if(context.user.auth) {
+
+                const nproyecto = new Proyecto({
+                    nombre: proyecto.nombre,
+                    presupuesto: proyecto.presupuesto,
+                    fechaInicio: "",
+                    fechaFin: "",
+                    objGeneral: proyecto.objGeneral,
+                    objEspecificos: proyecto.objEspecifico,
+                    idLider: proyecto.idLider,
+                    estadoProyecto: "Inactivo",
+                    fase: ""
+                });
+    
+                return await nproyecto.save();
+            }else{
+                throw new Error('No estas autorizado');
+            }
+
+
+          
         },
 
-        async actualizarProyecto( _, { id, proyecto }){
-            return await Proyecto.findByIdAndUpdate(id, {
-                nombre: proyecto.nombre,
-                presupuesto: proyecto.presupuesto,
-                objGeneral: proyecto.objGeneral,
-                objEspecificos: proyecto.objEspecifico,
-                idLider: proyecto.idLider,
-            })
+        async terminarProyecto( _, { id }, context) {
+
+            if(context.user.auth) {
+                    
+                return await Proyecto.findByIdAndUpdate(id, {
+                    fechaFin: hoy.toLocaleDateString(),
+                    estadoProyecto: "Terminado"
+                });
+
+            }else{
+                throw new Error('No estas autorizado');
+            }
+
         },
 
-        async eliminarProyecto( _, { id }){
-            return await Proyecto.findByIdAndDelete(id);
+        async aprobarProyecto( _, {id}, context) {
+
+            if(context.user.auth) {
+
+                return await Proyecto.findByIdAndUpdate(id, {
+                    fechaInicio: hoy.toLocaleString(),
+                    estadoProyecto: "Activo",
+                    fase: "Inicio"
+                })
+            }else{
+                throw new Error('No estas autorizado');
+            }
+
         },
 
-        async agregarInscripcion( _, { inscripcion }){
-            const ninscripcion = new Inscripcion({
-                estadoInscripcion: "En proceso",
-                fechaIngreso: "",
-                idProyecto: inscripcion.idProyecto,
-                idEstudiante: inscripcion.idEstudiante
-            });
+        async actualizarProyecto( _, { id, proyecto }, context) {
 
-            return await ninscripcion.save();
+            if(context.user.auth) {
+                return await Proyecto.findByIdAndUpdate(id, {
+                    nombre: proyecto.nombre,
+                    presupuesto: proyecto.presupuesto,
+                    objGeneral: proyecto.objGeneral,
+                    objEspecificos: proyecto.objEspecifico,
+                    idLider: proyecto.idLider,
+                })
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
         },
 
-        async aprobarInscripcion( _, {id}){
-            return await Inscripcion.findByIdAndUpdate(id, {
-                fechaIngreso: hoy.toLocaleString(),
-                estadoInscripcion: "Aprobada"
-            })
+        async eliminarProyecto( _, { id }, context) {
+                
+                if(context.user.auth) {
+                    return await Proyecto.findByIdAndDelete(id);
+                }else{
+                    throw new Error('No estas autorizado');
+                }
+                
         },
 
-        async eliminarInscripcion( _, { id }){
-            return await Inscripcion.findByIdAndDelete(id);
+        async agregarInscripcion( _, { inscripcion }, context) {
+
+            if(context.user.auth) {
+                const ninscripcion = new Inscripcion({
+                    estadoInscripcion: "En proceso",
+                    fechaIngreso: "",
+                    idProyecto: inscripcion.idProyecto,
+                    idEstudiante: inscripcion.idEstudiante
+                });
+    
+                return await ninscripcion.save();
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
         },
 
-        async agregarAvance( _, { avance }){
-            const navance = new Avance({
-                descripcion: avance.descripcion,
-                fecha_avance: hoy.toLocaleString(),
-                idProyecto: avance.idProyecto,
-                observaciones: []
-            });
+        async aprobarInscripcion( _, {id}, context) {
 
-            return await navance.save();
+            if(context.user.auth) {
+                return await Inscripcion.findByIdAndUpdate(id, {
+                    estadoInscripcion: "Aprobado",
+                    fechaIngreso: hoy.toLocaleString()
+                })
+            }else{
+                throw new Error('No estas autorizado');
+            }
+
+        },   
+
+        async eliminarInscripcion( _, { id }, context) {
+
+            if(context.user.auth) {
+                return await Inscripcion.findByIdAndDelete(id);
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
         },
 
-        async actualizarAvance( _, { id, descripcion }){
-            return await Avance.findByIdAndUpdate(id, {
-                descripcion: descripcion
-            })
+        async agregarAvance( _, { avance }, context) {
+
+            if(context.user.auth) {
+                const navance = new Avance({
+                    descripcion: avance.descripcion,
+                    fecha_avance: hoy.toLocaleString(),
+                    idProyecto: avance.idProyecto,
+                    observaciones: []
+                });
+    
+                return await navance.save();
+            }else{
+                throw new Error('No estas autorizado');
+            }
+
+            
         },
 
-        async agregarObservacion( _, { id, observacion }){
-            return await Avance.findByIdAndUpdate(id, {
-                observaciones: [observacion]
-            })
+        async actualizarAvance( _, { id, descripcion }, context) {
+
+            if(context.user.auth) {
+                return await Avance.findByIdAndUpdate(id, {
+                    descripcion: descripcion
+                })
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
+        },
+
+        async agregarObservacion( _, { id, observacion }, context) {
+
+            if(context.user.auth) {
+                return await Avance.findByIdAndUpdate(id, {
+                    observaciones: [observacion]
+                })
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
         },
 
         async eliminarAvance( _, { id }){
-            return await Avance.findByIdAndDelete(id);
+            if(context.user.auth) {
+                return await Avance.findByIdAndDelete(id);
+            }else{
+                throw new Error('No estas autorizado');
+            }
         }
 
 
