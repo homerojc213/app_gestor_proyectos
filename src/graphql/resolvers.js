@@ -139,7 +139,7 @@ export const resolvers = {
                     objGeneral: proyecto.objGeneral,
                     objEspecificos: proyecto.objEspecifico,
                     idLider: proyecto.idLider,
-                    estadoProyecto: "Inactivo",
+                    estadoProyecto: "No aprobado",
                     fase: ""
                 });
     
@@ -158,7 +158,8 @@ export const resolvers = {
                     
                 return await Proyecto.findByIdAndUpdate(id, {
                     fechaFin: hoy.toLocaleDateString(),
-                    estadoProyecto: "Terminado"
+                    estadoProyecto: "Inactivo",
+                    fase: "Finalizado"
                 });
 
             }else{
