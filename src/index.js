@@ -5,6 +5,7 @@ import {dbConnection} from './database/config';
 import { validarJwt } from './middleware/validar-jwt';
 
 
+
 const app = express();
 
 dbConnection(); //Iniciamos la conexión
