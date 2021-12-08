@@ -5,7 +5,7 @@ const secret = "mi-llave-secreta";
 export const validarJwt = (req,res,next) =>{
     let token = "";
     token  = req.headers["x-access-token"] || req.headers["authorization"];
-    console.log(token)
+    //console.log(token)
     if(!token){
         req.user = {auth : false}
         return next();
@@ -17,9 +17,8 @@ export const validarJwt = (req,res,next) =>{
     }
 
     try {
-        const {uid, nombre} = jwt.verify(token, secret);
-        console.log(uid, nombre);
-        req.user = {auth : true};
+        const {uid, rol} = jwt.verify(token, secret);
+        req.user = {auth: true, rol: rol, id: uid};
         return next();
         
     } catch (error) {

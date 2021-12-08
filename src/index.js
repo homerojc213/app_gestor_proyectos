@@ -24,5 +24,5 @@ app.use("/graphql", graphqlHTTP( (req) => ({
 
 app.listen(process.env.PORT || 4000, () => { //Levantando el servidor
     console.log(`Servidor corriendo en ${process.env.PORT || 4000}`);
-
 })
+

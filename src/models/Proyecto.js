@@ -25,7 +25,8 @@ const proyectoSchema = new Schema({
         required: true
     },
     idLider: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario',
         required: true
     },
     estadoProyecto: {
@@ -33,8 +34,14 @@ const proyectoSchema = new Schema({
     },
     fase: {
         type: String
-    }
-    
+    },
+    avances: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "Avance",
+          required: true,
+        }
+    ]
 },
 {
     collection: 'Proyectos'

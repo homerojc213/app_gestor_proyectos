@@ -12,8 +12,7 @@ const usuarioSchema = new Schema({
     },
     identificacion: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     correo: {
         type: String,

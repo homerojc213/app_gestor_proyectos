@@ -17,28 +17,36 @@ export const resolvers = {
 
     Query: {
         Usuarios: (_, args, context) => {  //Context sirve para inyectar info desde una query a otra, en este caso se usa para validar el token
-            if(context.user.auth) {
+            if(context.user.auth  && context.user.rol === 'Administrador'){
                 return Usuario.find();
             }else{
                 throw new Error('No estas autorizado');
             } 
         },
-        Proyectos: (_, args, context) => {
+        Proyectos: (_, args, context) => { //Todos los proyectos
             if(context.user.auth) {
                 return Proyecto.find();
             }else{
                 throw new Error('No estas autorizado');
             }
         },
-        Inscripciones: (_, args, context) => {
-            if(context.user.auth) {
+        ProyectosPorLider: (_, args, context) => {  //Ver los proyectos de un lider
+            if(context.user.auth && context.user.rol === 'Lider') {
+                return Proyecto.find({idLider: args.id});
+            }else{
+                throw new Error('No estas autorizado');
+            }
+        },
+
+        Inscripciones: (_, args, context) => {  //Todas las inscripciones
+            if(context.user.auth && context.user.rol === 'Lider') {
                 return Inscripcion.find();
             }else{
                 throw new Error('No estas autorizado');
             }
         },
-        Avances: (_, args, context) => {
-            if(context.user.auth) {
+        Avances: (_, args, context) => {   //Todos los avances
+            if(context.user.auth && context.user.rol === 'Estudiante' || context.user.rol === 'Lider') {
                 return Avance.find();
             }else{
                 throw new Error('No estas autorizado');
@@ -55,7 +63,7 @@ export const resolvers = {
             const valido = bycript.compareSync(clave, usuario.clave); //comparando con la contraseña encriptada
 
             if (valido) {
-                const token = await generarJWT(usuario.id, usuario.nombre);
+                const token = await generarJWT(usuario.id, usuario.rol);
                 return token;
                 
             }else{
@@ -68,9 +76,10 @@ export const resolvers = {
 
     },
     Mutation: {
-        async agregarUsuario( _, { usuario }, context) {
+        async agregarUsuario( _, { usuario }, context) {   //Este es el registro de nuevo usuario
 
             if(context.user.auth) {
+                
                 const nusuario = new Usuario({
                     nombres: usuario.nombres,
                     apellidos: usuario.apellidos,
@@ -78,7 +87,7 @@ export const resolvers = {
                     correo: usuario.correo,
                     clave: bycript.hashSync(usuario.clave, salt),
                     rol: usuario.rol,
-                    estado: "Inactivo"
+                    estado: "Pendiente"
                 });
     
                 return await nusuario.save();
@@ -87,7 +96,21 @@ export const resolvers = {
             }
             
         },
-        async actualizarUsuario( _, { id, usuario }, context) {
+
+        async aprobarUsuario( _, { id}, context) {   //Administrador aprueba un usuario nuevo
+
+            if(context.user.auth && context.user.rol === 'Administrador') {
+                return await Usuario.findByIdAndUpdate(id, {
+                    estado: "Autorizado"
+                });
+            }else{
+                throw new Error('No estas autorizado');
+            }
+
+            
+        },
+
+        async actualizarUsuario( _, { id, usuario }, context) {   //Usuario(de cualquier rol) modifica sus propios datos
 
             if(context.user.auth) {
 
@@ -96,30 +119,17 @@ export const resolvers = {
                     apellidos: usuario.apellidos,
                     identificacion: usuario.identificacion,
                     correo: usuario.correo,
-                    clave: bycript.hashSync(usuario.clave, salt),
-                    rol: usuario.rol
+                    clave: bycript.hashSync(usuario.clave, salt)
                 });
             }else{
                 throw new Error('No estas autorizado');
             }
 
         },
-        async actualizarEstadoUsuario( _, { id, estado }, context) {
-
-            if(context.user.auth) {
-                return await Usuario.findByIdAndUpdate(id, {
-                    estado: estado
-                });
-            }else{
-                throw new Error('No estas autorizado');
-            }
-
-            
-        },
-
+        
         async eliminarUsuario( _, { id }, context) {
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Administrador') {
                 return await Usuario.findByIdAndDelete(id);
             }else{
                 throw new Error('No estas autorizado');
@@ -127,9 +137,9 @@ export const resolvers = {
             
         },
 
-        async agregarProyecto( _, { proyecto }, context) {
+        async agregarProyecto( _, { proyecto }, context) {  //Lider agrega un nuevo proyecto
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Lider') {
 
                 const nproyecto = new Proyecto({
                     nombre: proyecto.nombre,
@@ -139,8 +149,9 @@ export const resolvers = {
                     objGeneral: proyecto.objGeneral,
                     objEspecificos: proyecto.objEspecifico,
                     idLider: proyecto.idLider,
-                    estadoProyecto: "No aprobado",
-                    fase: ""
+                    estadoProyecto: "Inactivo",
+                    fase: "",
+                    avances: []
                 });
     
                 return await nproyecto.save();
@@ -152,25 +163,10 @@ export const resolvers = {
           
         },
 
-        async terminarProyecto( _, { id }, context) {
-
-            if(context.user.auth) {
-                    
-                return await Proyecto.findByIdAndUpdate(id, {
-                    fechaFin: hoy.toLocaleDateString(),
-                    estadoProyecto: "Inactivo",
-                    fase: "Finalizado"
-                });
-
-            }else{
-                throw new Error('No estas autorizado');
-            }
-
-        },
 
         async aprobarProyecto( _, {id}, context) {
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Administrador') { //Administrador aprueba un proyecto
 
                 return await Proyecto.findByIdAndUpdate(id, {
                     fechaInicio: hoy.toLocaleString(),
@@ -183,15 +179,31 @@ export const resolvers = {
 
         },
 
-        async actualizarProyecto( _, { id, proyecto }, context) {
+        async terminarProyecto( _, { id }, context) {   //Administrador termina un proyecto
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Administrador') {
+                    
+                return await Proyecto.findByIdAndUpdate(id, {
+                    fechaFin: hoy.toLocaleDateString(),
+                    estadoProyecto: "Inactivo",
+                    fase: "Terminado"
+                });
+
+            }else{
+                throw new Error('No estas autorizado');
+            }
+
+        },
+
+
+        async actualizarProyecto( _, { id, proyecto }, context) {  //Lider modifica un proyecto
+
+            if(context.user.auth && context.user.rol === 'Lider') {
                 return await Proyecto.findByIdAndUpdate(id, {
                     nombre: proyecto.nombre,
                     presupuesto: proyecto.presupuesto,
                     objGeneral: proyecto.objGeneral,
-                    objEspecificos: proyecto.objEspecifico,
-                    idLider: proyecto.idLider,
+                    objEspecificos: proyecto.objEspecificos
                 })
             }else{
                 throw new Error('No estas autorizado');
@@ -201,7 +213,7 @@ export const resolvers = {
 
         async eliminarProyecto( _, { id }, context) {
                 
-                if(context.user.auth) {
+                if(context.user.auth && context.user.rol === 'Lider') { //Lider elimina un proyecto
                     return await Proyecto.findByIdAndDelete(id);
                 }else{
                     throw new Error('No estas autorizado');
@@ -226,9 +238,9 @@ export const resolvers = {
             
         },
 
-        async aprobarInscripcion( _, {id}, context) {
+        async aprobarInscripcion( _, {id}, context) { //Lider aprueba inscripción 
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Lider') {
                 return await Inscripcion.findByIdAndUpdate(id, {
                     estadoInscripcion: "Aprobado",
                     fechaIngreso: hoy.toLocaleString()
@@ -239,9 +251,9 @@ export const resolvers = {
 
         },   
 
-        async eliminarInscripcion( _, { id }, context) {
+        async eliminarInscripcion( _, { id }, context) {  //Lider elimina una inscripción
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Lider') {
                 return await Inscripcion.findByIdAndDelete(id);
             }else{
                 throw new Error('No estas autorizado');
@@ -249,17 +261,31 @@ export const resolvers = {
             
         },
 
-        async agregarAvance( _, { avance }, context) {
+        async agregarAvance( _, { idProyecto, descripcion }, context) {  //Estudiante agrega un avance
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Estudiante') {
                 const navance = new Avance({
-                    descripcion: avance.descripcion,
+                    descripcion: descripcion,
                     fecha_avance: hoy.toLocaleString(),
-                    idProyecto: avance.idProyecto,
+                    idProyecto: idProyecto,
                     observaciones: []
                 });
-    
-                return await navance.save();
+
+                let { _id } = await navance.save(); //Guarda el avance y a la vez obtiene el id con el que quedó en la bd
+
+                if(_id){
+
+                    let { avances } = await Proyecto.findById(idProyecto); //Obtiene los avances actuales del proyecto
+
+                    let nuevosAvances = [...avances, _id]; //Agrega el nuevo avance al arreglo de avances
+
+                    return await Proyecto.findByIdAndUpdate(
+                        idProyecto,
+                        { avances: nuevosAvances },
+                        { new: true }
+                    ).populate("avances");
+                }
+
             }else{
                 throw new Error('No estas autorizado');
             }
@@ -267,9 +293,9 @@ export const resolvers = {
             
         },
 
-        async actualizarAvance( _, { id, descripcion }, context) {
+        async actualizarAvance( _, { id, descripcion }, context) {   //Estudiante actualiza un avance
 
-            if(context.user.auth) {
+            if(context.user.auth && context.user.rol === 'Estudiante') {
                 return await Avance.findByIdAndUpdate(id, {
                     descripcion: descripcion
                 })
@@ -279,27 +305,36 @@ export const resolvers = {
             
         },
 
-        async agregarObservacion( _, { id, observacion }, context) {
-
-            if(context.user.auth) {
-                return await Avance.findByIdAndUpdate(id, {
-                    observaciones: [observacion]
-                })
-            }else{
-                throw new Error('No estas autorizado');
-            }
-            
-        },
-
-        async eliminarAvance( _, { id }){
-            if(context.user.auth) {
+        async eliminarAvance( _, { id }){  //Estudiante elimina un avance
+            if(context.user.auth && context.user.rol === 'Estudiante') {
                 return await Avance.findByIdAndDelete(id);
             }else{
                 throw new Error('No estas autorizado');
             }
+        },
+
+        async agregarObservacion( _, { idAvance, observacion }, context) {  //Lider agrega una observación
+
+            if(context.user.auth && context.user.rol === 'Lider') {
+
+                let { observaciones } = await Avance.findById(idAvance); //Buscamos el avance
+                let nuevaObservacion={  //Creamos un objeto con la nueva observación
+                  observacion:observacion,
+                  fechaObservacion: hoy.toLocaleString()
+                }
+               let listaObservaciones = [...observaciones, nuevaObservacion]; //Agregamos la nueva observación a un arreglo de observaciones
+               return await Avance.findByIdAndUpdate(
+                  idAvance,
+                 { observaciones: listaObservaciones },
+                 { new: true }
+               );
+
+
+            }else{
+                throw new Error('No estas autorizado');
+            }
+            
         }
-
-
     }
 
 };
