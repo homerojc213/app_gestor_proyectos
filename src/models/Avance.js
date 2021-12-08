@@ -16,7 +16,19 @@ const avanceSchema = new Schema({
         required: true
     },
     observaciones: {
-        type: [String],
+        type: [ {
+            
+            observacion:{
+             type: String,
+             required:true
+            } ,
+            fechaObservacion:{
+              type: String,
+              default: Date.now()
+            }
+             
+           }
+        ]
     }
     
 },
