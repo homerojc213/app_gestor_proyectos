@@ -307,7 +307,19 @@ export const resolvers = {
 
         async eliminarAvance( _, { id }){  //Estudiante elimina un avance
             if(context.user.auth && context.user.rol === 'Estudiante') {
-                return await Avance.findByIdAndDelete(id);
+
+                Avance.findByIdAndDelete(id);
+
+                let { avances } = await Proyecto.findById(id); //Obtiene los avances actuales del proyecto
+
+                let nuevosAvances = avances.filter(avance => avance.toString() !== id); //Elimina el avance del arreglo de avances
+
+                return await Proyecto.findByIdAndUpdate(
+                    id,
+                    { avances: nuevosAvances },
+                    { new: true }
+                ).populate("avances");
+    
             }else{
                 throw new Error('No estas autorizado');
             }
