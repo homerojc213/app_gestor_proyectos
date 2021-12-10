@@ -3,9 +3,11 @@ import { Navigation } from './Navigation'
 
 export const NuevoProyecto = () => {
     return (
-        <div className="container">
+        <>
             <Navigation />
+        <div className="container">
             <h2>Nuevo Proyecto</h2>
         </div>
+        </>
     )
 }
