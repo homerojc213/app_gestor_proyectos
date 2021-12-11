@@ -7,7 +7,7 @@ const GET_PROYECTOS = gql`
                 nombre
                 presupuesto
             }
-        }
+    }
 `;
 
 export default GET_PROYECTOS;

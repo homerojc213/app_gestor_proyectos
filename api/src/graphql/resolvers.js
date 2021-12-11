@@ -47,9 +47,12 @@ export const resolvers = {
             }else{
                 throw new Error('No estas autorizado');
             }
-        },
-        Login: async (_, { correo, clave}) => {
+        }
+            
+    },
+    Mutation: {
 
+        async login (_, { correo, clave }) {
             const usuario = await Usuario.findOne({ correo });
 
             if (!usuario) {
@@ -59,19 +62,17 @@ export const resolvers = {
             const valido = bycript.compareSync(clave, usuario.clave); //comparando con la contraseña encriptada
 
             if (valido) {
-                const token = await generarJWT(usuario.id, usuario.rol);
-                return token;
+                return {
+                    token: await generarJWT(usuario.id, usuario.rol)
+                }
                 
             }else{
-                return "Usuario o contraseña incorrectos";
+                return {
+                    error: "Usuario o contraseña incorrectos"
+                }
             }
-   
-
-        }
-            
-
-    },
-    Mutation: {
+        },
+        
         async agregarUsuario( _, { usuario }, context) {   //Este es el registro de nuevo usuario
 
             if(context.user.auth) {

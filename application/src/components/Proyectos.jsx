@@ -15,7 +15,7 @@ export const Proyectos = () => {
         <div className="container">
             <h2>Proyectos</h2>
             {loading && <p>Cargando...</p>}
-            {error && <p>Error</p>}
+            {error && <p>Error al cargar los proyectos</p>}
 
             
         </div>

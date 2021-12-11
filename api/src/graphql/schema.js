@@ -11,10 +11,12 @@ const typeDefs = `
         ProyectosPorLider(id: ID!): [Proyecto]
         Inscripciones: [Inscripcion]
         Avances: [Avance]
-        Login(correo: String!, clave: String!): String
+        
+        
     }
 
     type Mutation {
+        login(correo: String!, clave: String!): Token!
         agregarUsuario(usuario: UsuarioInput): Usuario,
         aprobarUsuario(id: ID!): Usuario,
         actualizarUsuario(id: ID!, usuario: UsuarioActInput): Usuario
@@ -32,6 +34,12 @@ const typeDefs = `
         agregarObservacion(idAvance: ID!, observacion: String!): Avance
         eliminarAvance(id: ID!): Avance
 
+    }
+
+
+    type Token{
+        token: String
+        error: String
     }
 
     type Proyecto {

@@ -6,8 +6,6 @@ import { validarJwt } from './middleware/validar-jwt';
 import cors from 'cors';
 
 
-
-
 const app = express();
 
 dbConnection(); //Iniciamos la conexión
