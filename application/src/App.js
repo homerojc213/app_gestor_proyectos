@@ -11,6 +11,9 @@ import { Proyectos } from './components/Proyectos';
 import { Usuarios } from './components/Usuarios';
 import { Inicio } from './components/Inicio';
 import { Login } from './components/Login';
+import { InscripcionProyecto } from './components/InscripcionProyecto';
+import { AprobarUsuarios } from './components/AprobarUsuarios';
+
 
 
 function App() {
@@ -22,6 +25,8 @@ function App() {
           <Route path="/NuevoProyecto"  element={<NuevoProyecto />} />
           <Route path="/Usuarios"  element={<Usuarios />} />
           <Route path="/Login"  element={<Login />} />
+          <Route path="/InscripcionProyecto"  element={<InscripcionProyecto/>} />
+          <Route path="/AprobarUsuarios"  element={<AprobarUsuarios/>} />
 
         </Routes>
     </Router>

@@ -1,9 +1,10 @@
 import {useMutation} from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import {LOGIN} from '../Apollo/gql/login';
+import {LOGIN, REGISTER} from '../Apollo/gql/auth';
 import { AUTH_TOKEN } from '../constants';
 import React, { useState } from 'react';
 import logo from '../images/LogoProjectsTable.png'
+import swal from 'sweetalert';
 
 export const Login = () => {
 
@@ -26,11 +27,62 @@ export const Login = () => {
       clave: formState.clave
     },
     onCompleted: ({ login }) => {
-      localStorage.setItem(AUTH_TOKEN, login.token);
-      navigate('/');
+
+      if (login.token) {
+        localStorage.setItem(AUTH_TOKEN, login.token);
+        navigate('/');
+      }else {
+        swal("Error", "¡Ups! Usuario o contraseña incorrectos", "error");
+      }
+
+    },
+    onError: (error) => {
+      console.log(error);
     }
   });
-    
+
+  const [agregarUsuario] = useMutation(REGISTER, {
+    variables: {
+      nombres: formState.nombres,
+      apellidos: formState.apellidos,
+      identificacion: formState.identificacion,
+      correo: formState.correo,
+      clave: formState.clave,
+      rol: formState.rol
+    },
+    onCompleted: () => {
+      swal("Exito", "¡Usuario registrado con exito! Debes la aprobación de tu cuenta por parte de un administrador", "success");
+    },
+    onError: (error) => {
+      swal("Error", "¡Ups! No se pudo registrar el usuario", "error");
+    }
+
+  });
+
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (formState.login) {
+
+      if (formState.correo === '' || formState.clave === '') {
+        swal("Error", "¡Todos los campos son obligatorios!", "error");
+      } else {
+        login();
+      }
+  
+    } else {
+      if (formState.nombres === '' || formState.apellidos === '' || formState.identificacion === '' || formState.correo === '' || formState.clave === '' || formState.rol === '') {
+        swal("Error", "¡Todos los campos son obligatorios!", "error");
+      }else {
+        agregarUsuario();
+      }
+     
+    }
+  };
+
+
 
   return (
     <div className='d-flex flex-column justify-content-center align-items-center container-login '>
@@ -99,7 +151,7 @@ export const Login = () => {
                 })
               }
             >
-              <option value="" disabled>Rol al que aspiras</option>
+              <option value="" disabled>Seleccione un rol</option>
               <option value="Administrador">Administrador</option>
               <option value="Lider">Usuario</option>
               <option value="Estudiante">Estudiante</option>
@@ -121,7 +173,7 @@ export const Login = () => {
                 correo: e.target.value
               })
             }
-            type="text"
+            type="email"
           />
         </div>
         <div className="form-group">
@@ -144,7 +196,7 @@ export const Login = () => {
       <div className='mt-2'>
         <button
           className="btn btn-login"
-          onClick={login}
+          onClick={handleSubmit}
         >
           {formState.login ? 'Iniciar sesión' : 'Crear una cuenta'}
         </button>

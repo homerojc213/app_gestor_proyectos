@@ -17,7 +17,7 @@ const typeDefs = `
 
     type Mutation {
         login(correo: String!, clave: String!): Token!
-        agregarUsuario(usuario: UsuarioInput): Usuario,
+        agregarUsuario(nombres: String!, apellidos: String!, identificacion: String!, correo: String!, clave: String!, rol: String!): Usuario!
         aprobarUsuario(id: ID!): Usuario,
         actualizarUsuario(id: ID!, usuario: UsuarioActInput): Usuario
         eliminarUsuario(id: ID!): Usuario
@@ -90,15 +90,7 @@ const typeDefs = `
         fechaObservacion: String
      }
 
-    
-    input UsuarioInput {
-        nombres: String!,
-        apellidos: String!,
-        identificacion: String!,
-        correo: String!,
-        clave: String!,
-        rol: String!
-    }
+  
 
     input UsuarioActInput{
         nombres: String,

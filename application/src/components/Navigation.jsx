@@ -25,13 +25,19 @@ export const Navigation = () => {
                             {authToken && (
                                 <>
                                 <Nav.Link href="/">Inicio</Nav.Link>
-                                <NavDropdown title="Proyectos" id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="/Proyectos">Lista de proyectos</NavDropdown.Item>
-                                    <NavDropdown.Divider />
+                                <Nav.Link href="/proyectos">Proyectos</Nav.Link>
+                                 <NavDropdown title="Estudiantes" id="basic-nav-dropdown">
+                                    <NavDropdown.Item href="/InscripcionProyecto">Inscribirse a un proyecto</NavDropdown.Item>
+                                </NavDropdown>
+                                <NavDropdown title="Lideres" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/NuevoProyecto">Nuevo proyecto</NavDropdown.Item>
                                 </NavDropdown>
                                 <NavDropdown title="Administracion" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/Usuarios">Lista de usuarios</NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item href="/AprobarUsuarios">Aprobar usuarios</NavDropdown.Item>
+                                    <NavDropdown.Item href="/AprobarProyectos">Aprobar proyectos</NavDropdown.Item>
+
                                 </NavDropdown>
                                 <NavDropdown title="Mi cuenta" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/Perfil">Perfil</NavDropdown.Item>

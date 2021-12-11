@@ -73,24 +73,19 @@ export const resolvers = {
             }
         },
         
-        async agregarUsuario( _, { usuario }, context) {   //Este es el registro de nuevo usuario
+        async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol }) {
 
-            if(context.user.auth) {
-                
                 const nusuario = new Usuario({
-                    nombres: usuario.nombres,
-                    apellidos: usuario.apellidos,
-                    identificacion: usuario.identificacion,
-                    correo: usuario.correo,
-                    clave: bycript.hashSync(usuario.clave, salt),
-                    rol: usuario.rol,
+                    nombres: nombres,
+                    apellidos: apellidos,
+                    identificacion: identificacion,
+                    correo: correo,
+                    clave: bycript.hashSync(clave, salt),
+                    rol: rol,
                     estado: "Pendiente"
                 });
     
                 return await nusuario.save();
-            }else{
-                throw new Error('No estas autorizado');
-            }
             
         },
 
