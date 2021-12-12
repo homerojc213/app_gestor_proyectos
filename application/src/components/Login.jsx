@@ -153,7 +153,7 @@ export const Login = () => {
             >
               <option value="" disabled>Seleccione un rol</option>
               <option value="Administrador">Administrador</option>
-              <option value="Lider">Usuario</option>
+              <option value="Lider">Lider</option>
               <option value="Estudiante">Estudiante</option>
             </select>
           </div>
