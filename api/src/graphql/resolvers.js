@@ -23,8 +23,8 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             } 
         },
-        Proyectos: (_, args, context) => { //Todos los proyectos
-            return Proyecto.find();
+        Proyectos: async (_, args, context) => { //Todos los proyectos
+            return await Proyecto.find();
         },
         ProyectosPorLider: (_, args, context) => {  //Ver los proyectos de un lider
             if(context.user.auth && context.user.rol === 'Lider') {
