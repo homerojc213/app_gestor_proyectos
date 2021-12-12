@@ -26,3 +26,21 @@
 .btn-login:hover{
   color:rgba(212, 113, 51, 0.527)
 }
+
+.form-nuevoProyecto{
+  max-width: 500px;
+  border: 1px dotted rgb(97, 91, 91);
+  margin: auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  
+}
+
+.btn-submit{
+  background-color: rgb(212, 113, 51);
+  border-color: rgb(126, 75, 43);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}

@@ -3,12 +3,13 @@ import jwt from "jsonwebtoken";
 
 const secret = "mi-llave-secreta"; //esto debería ir en variable de entorno
 
-export const generarJWT = (uid, rol) => {
+export const generarJWT = (uid, rol, estado) => {
 
     return new Promise((resolve, reject) => {
         const payload = {
             uid,
-            rol
+            rol,
+            estado
         }
         jwt.sign(payload, secret, {expiresIn: '4h'},
             (error, token) => {

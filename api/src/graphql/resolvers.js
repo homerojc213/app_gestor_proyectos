@@ -23,8 +23,13 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             } 
         },
+
         Proyectos: async (_, args, context) => { //Todos los proyectos
+            if(context.user.auth){
             return await Proyecto.find();
+            }else{
+                throw new Error('No estas autorizado');
+            }
         },
         ProyectosPorLider: (_, args, context) => {  //Ver los proyectos de un lider
             if(context.user.auth && context.user.rol === 'Lider') {
@@ -63,7 +68,7 @@ export const resolvers = {
 
             if (valido) {
                 return {
-                    token: await generarJWT(usuario.id, usuario.rol)
+                    token: await generarJWT(usuario.id, usuario.rol, usuario.estado)
                 }
                 
             }else{
@@ -129,18 +134,17 @@ export const resolvers = {
             
         },
 
-        async agregarProyecto( _, { proyecto }, context) {  //Lider agrega un nuevo proyecto
+        async agregarProyecto( _, { nombre, presupuesto, objGeneral, objEspecificos, idLider }, context) {
 
             if(context.user.auth && context.user.rol === 'Lider') {
-
                 const nproyecto = new Proyecto({
-                    nombre: proyecto.nombre,
-                    presupuesto: proyecto.presupuesto,
+                    nombre: nombre,
+                    presupuesto: presupuesto,
                     fechaInicio: "",
                     fechaFin: "",
-                    objGeneral: proyecto.objGeneral,
-                    objEspecificos: proyecto.objEspecifico,
-                    idLider: proyecto.idLider,
+                    objGeneral: objGeneral,
+                    objEspecificos: objEspecificos,
+                    idLider: idLider,
                     estadoProyecto: "Inactivo",
                     fase: "",
                     avances: []
@@ -150,7 +154,7 @@ export const resolvers = {
             }else{
                 throw new Error('No estas autorizado');
             }
-
+            
 
           
         },

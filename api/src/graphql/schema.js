@@ -21,7 +21,7 @@ const typeDefs = `
         aprobarUsuario(id: ID!): Usuario,
         actualizarUsuario(id: ID!, usuario: UsuarioActInput): Usuario
         eliminarUsuario(id: ID!): Usuario
-        agregarProyecto(proyecto: ProyectoInput): Proyecto
+        agregarProyecto(nombre: String!, presupuesto: Float!, objGeneral: String!, objEspecificos: [String]!, idLider: ID!) : Proyecto!
         aprobarProyecto(id: ID!): Proyecto
         terminarProyecto(id: ID!): Proyecto
         actualizarProyecto(id: ID!, proyecto: ProyectoActInput): Proyecto 
@@ -100,13 +100,7 @@ const typeDefs = `
         clave: String
     }
 
-    input ProyectoInput {
-        nombre: String!,
-        presupuesto: Float!,
-        objGeneral: String!,
-        objEspecificos: [String],
-        idLider: ID!
-    }
+  
 
     input ProyectoActInput{
         nombre: String,

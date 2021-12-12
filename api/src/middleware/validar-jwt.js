@@ -17,8 +17,8 @@ export const validarJwt = (req,res,next) =>{
     }
 
     try {
-        const {uid, rol} = jwt.verify(token, secret);
-        req.user = {auth: true, rol: rol, id: uid};
+        const {uid, rol, estado} = jwt.verify(token, secret);
+        req.user = {auth: true, rol: rol, id: uid , estado: estado};
         return next();
         
     } catch (error) {

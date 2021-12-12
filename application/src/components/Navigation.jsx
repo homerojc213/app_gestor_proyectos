@@ -11,6 +11,9 @@ export const Navigation = () => {
 
     const authToken = localStorage.getItem(AUTH_TOKEN);
 
+    const role = JSON.parse(window.atob(authToken.split('.')[1])).rol;
+
+
     return (
         <div>
              <Navbar bg="light" expand="lg">
@@ -22,23 +25,35 @@ export const Navigation = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
 
-                            {authToken && (
-                                <>
                                 <Nav.Link href="/">Inicio</Nav.Link>
+
                                 <Nav.Link href="/proyectos">Proyectos</Nav.Link>
+
+                                {role === 'Estudiante' && 
+
                                  <NavDropdown title="Estudiantes" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/InscripcionProyecto">Inscribirse a un proyecto</NavDropdown.Item>
                                 </NavDropdown>
+
+                                }
+
+                                {role === 'Lider' &&
                                 <NavDropdown title="Lideres" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/NuevoProyecto">Nuevo proyecto</NavDropdown.Item>
                                 </NavDropdown>
+                                }
+
+                                {role === 'Administrador' &&
+
                                 <NavDropdown title="Administracion" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/Usuarios">Lista de usuarios</NavDropdown.Item>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item href="/AprobarUsuarios">Aprobar usuarios</NavDropdown.Item>
                                     <NavDropdown.Item href="/AprobarProyectos">Aprobar proyectos</NavDropdown.Item>
-
                                 </NavDropdown>
+                                }
+
+                                {authToken && 
                                 <NavDropdown title="Mi cuenta" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/Perfil">Perfil</NavDropdown.Item>
                                     <NavDropdown.Divider />
@@ -51,10 +66,8 @@ export const Navigation = () => {
                                     Cerrar sesión
                                     </button>
                                 </NavDropdown>
+                                }
 
-                                </>
-
-                            )}
 
                             {!authToken && (
                                 <>
