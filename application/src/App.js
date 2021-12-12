@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
 
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,6 +14,7 @@ import { Inicio } from './components/Inicio';
 import { Login } from './components/Login';
 import { InscripcionProyecto } from './components/InscripcionProyecto';
 import { AprobarUsuarios } from './components/AprobarUsuarios';
+import PrivateRoute from './router/PrivateRoute';
 
 
 
@@ -21,12 +23,13 @@ function App() {
     <Router>
         <Routes>
           <Route exact path="/" element={<Inicio />} />
-          <Route path="/Proyectos" element={<Proyectos />} />
-          <Route path="/NuevoProyecto"  element={<NuevoProyecto />} />
-          <Route path="/Usuarios"  element={<Usuarios />} />
-          <Route path="/Login"  element={<Login />} />
-          <Route path="/InscripcionProyecto"  element={<InscripcionProyecto/>} />
-          <Route path="/AprobarUsuarios"  element={<AprobarUsuarios/>} />
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/proyectos" element={<PrivateRoute><Proyectos /></PrivateRoute>}/>
+          <Route path="/NuevoProyecto" element={<PrivateRoute><NuevoProyecto /></PrivateRoute>}/>
+          <Route path="/Usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>}/>
+          <Route path="/InscripcionProyecto" element={<PrivateRoute><InscripcionProyecto /></PrivateRoute>}/>
+          <Route path="/AprobarUsuarios" element={<PrivateRoute><AprobarUsuarios /></PrivateRoute>}/>
 
         </Routes>
     </Router>
