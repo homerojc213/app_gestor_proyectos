@@ -32,11 +32,7 @@ export const resolvers = {
             }
         },
         ProyectosPorLider: (_, args, context) => {  //Ver los proyectos de un lider
-            if(context.user.auth && context.user.rol === 'Lider') {
                 return Proyecto.find({idLider: args.id});
-            }else{
-                throw new Error('No estas autorizado');
-            }
         },
 
         Inscripciones: (_, args, context) => {  //Todas las inscripciones
@@ -181,7 +177,7 @@ export const resolvers = {
                     
                 return await Proyecto.findByIdAndUpdate(id, {
                     fechaFin: hoy.toLocaleDateString(),
-                    estadoProyecto: "Inactivo",
+                    estadoProyecto: "Terminado",
                     fase: "Terminado"
                 });
 

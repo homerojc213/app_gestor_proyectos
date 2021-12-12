@@ -11,8 +11,13 @@ export const Navigation = () => {
 
     const authToken = localStorage.getItem(AUTH_TOKEN);
 
-    const role = JSON.parse(window.atob(authToken.split('.')[1])).rol;
+    let role = '';
 
+    if(authToken){
+        role = JSON.parse(window.atob(authToken.split('.')[1])).rol;
+    }
+
+   
 
     return (
         <div>
@@ -40,6 +45,7 @@ export const Navigation = () => {
                                 {role === 'Lider' &&
                                 <NavDropdown title="Lideres" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/NuevoProyecto">Nuevo proyecto</NavDropdown.Item>
+                                    <NavDropdown.Item href="/MisProyectosLider">Mis proyectos</NavDropdown.Item>
                                 </NavDropdown>
                                 }
 

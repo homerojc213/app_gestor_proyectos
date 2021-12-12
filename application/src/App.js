@@ -15,6 +15,7 @@ import { Login } from './components/Login';
 import { InscripcionProyecto } from './components/InscripcionProyecto';
 import { AprobarUsuarios } from './components/AprobarUsuarios';
 import PrivateRoute from './router/PrivateRoute';
+import { MisProyectosLider } from './components/MisProyectosLider';
 
 
 
@@ -27,6 +28,7 @@ function App() {
 
           <Route path="/proyectos" element={<PrivateRoute><Proyectos /></PrivateRoute>}/>
           <Route path="/NuevoProyecto" element={<PrivateRoute><NuevoProyecto /></PrivateRoute>}/>
+          <Route path="/MisProyectosLider" element={<PrivateRoute><MisProyectosLider /></PrivateRoute>}/>
           <Route path="/Usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>}/>
           <Route path="/InscripcionProyecto" element={<PrivateRoute><InscripcionProyecto /></PrivateRoute>}/>
           <Route path="/AprobarUsuarios" element={<PrivateRoute><AprobarUsuarios /></PrivateRoute>}/>
