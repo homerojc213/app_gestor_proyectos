@@ -77,7 +77,7 @@ export const Usuarios = () => {
                                                 {//el lider solo ingresa a sus proyectos y puede crear proyectos nuevos 
                                                 }
 
-                                                {rol === 'Lider' ? (
+                                                {/* {rol === 'Lider' ? (
                                                     <div>
                                                         <Button variant="outline-primary">Editar</Button>{' '}
                                                     </div>
@@ -87,7 +87,7 @@ export const Usuarios = () => {
                                                     <div>
                                                         <Button variant="outline-primary">Editar</Button>{' '}
                                                     </div>
-                                                ) : ''}
+                                                ) : ''} */}
 
                                             </div>
                                         </Card.Text>
