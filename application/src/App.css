@@ -1,3 +1,13 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  font-family: 'Readex Pro', sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
 .container-login{
   background-color: rgb(34, 52, 77);
   background-image: linear-gradient(

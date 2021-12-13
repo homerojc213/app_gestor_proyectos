@@ -19,7 +19,7 @@ export const Proyectos = () => {
             token = JSON.parse(window.atob(authToken.split('.')[1]));
             setRol(token.rol);
         }
-    });
+    }, [apollo.data]);
 
     const nuevoProyecto = () => {
         navigate('/nuevoProyecto');
