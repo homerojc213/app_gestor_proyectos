@@ -6,9 +6,7 @@ import Avance from '../models/Avance';
 import bycript from 'bcrypt';
 import { generarJWT } from '../helpers/jwt';
 
-//Para calcular la fecha actual
-const tiempoTranscurrido = Date.now();
-const hoy = new Date(tiempoTranscurrido);
+
 
 //Para encriptar contraseña
 const salt =  bycript.genSaltSync();
@@ -32,7 +30,11 @@ export const resolvers = {
             }
         },
         ProyectosPorLider: (_, args, context) => {  //Ver los proyectos de un lider
+            if(context.user.auth && context.user.rol === 'Lider'){
                 return Proyecto.find({idLider: args.id});
+            }else{
+                throw new Error('No estas autorizado');
+            }
         },
 
         Inscripciones: (_, args, context) => {  //Todas las inscripciones
@@ -42,9 +44,10 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             }
         },
-        Avances: (_, args, context) => {   //Todos los avances
-            if(context.user.auth && context.user.rol === 'Estudiante' || context.user.rol === 'Lider') {
-                return Avance.find();
+        
+        AvancesPorProyecto: (_, args, context) => {   //Todos los avances por proyecto
+            if(context.user.auth) {
+                return Avance.find({idProyecto: args.id});
             }else{
                 throw new Error('No estas autorizado');
             }
@@ -62,16 +65,24 @@ export const resolvers = {
 
             const valido = bycript.compareSync(clave, usuario.clave); //comparando con la contraseña encriptada
 
-            if (valido) {
-                return {
-                    token: await generarJWT(usuario.id, usuario.rol, usuario.estado)
-                }
-                
-            }else{
+            if (!valido) {
                 return {
                     error: "Usuario o contraseña incorrectos"
                 }
             }
+
+
+            if(valido && usuario.estado !== 'Autorizado'){
+                return {
+                    error: "Ups! tu cuenta esta inactiva, contacta con el administrador"
+                }
+            }else if(valido && usuario.estado === 'Autorizado'){
+                return {
+                    token: await generarJWT(usuario.id, usuario.nombres, usuario.rol, usuario.estado)
+                }
+            }
+                
+            
         },
         
         async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol }) {
@@ -158,7 +169,10 @@ export const resolvers = {
 
         async aprobarProyecto( _, {id}, context) {
 
-            if(context.user.auth && context.user.rol === 'Administrador') { //Administrador aprueba un proyecto
+            let tiempoTranscurrido = Date.now();
+            let hoy = new Date(tiempoTranscurrido);
+
+            if(context.user.auth) { //Administrador aprueba un proyecto
                 try {
                     return await Proyecto.findByIdAndUpdate(id, {
                         fechaInicio: hoy.toLocaleString(),
@@ -176,6 +190,9 @@ export const resolvers = {
         },
 
         async terminarProyecto( _, { id }, context) {   //Administrador termina un proyecto
+
+            let tiempoTranscurrido = Date.now();
+            let hoy = new Date(tiempoTranscurrido);
 
             if(context.user.auth && context.user.rol === 'Administrador') {
                     
@@ -322,6 +339,9 @@ export const resolvers = {
         },
 
         async agregarObservacion( _, { idAvance, observacion }, context) {  //Lider agrega una observación
+
+            let tiempoTranscurrido = Date.now();
+            let hoy = new Date(tiempoTranscurrido);
 
             if(context.user.auth && context.user.rol === 'Lider') {
 

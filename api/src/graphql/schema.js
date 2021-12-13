@@ -10,9 +10,7 @@ const typeDefs = `
         Proyectos: [Proyecto]
         ProyectosPorLider(id: ID!): [Proyecto]
         Inscripciones: [Inscripcion]
-        Avances: [Avance]
-        
-        
+        AvancesPorProyecto(id: ID!): [Avance]
     }
 
     type Mutation {

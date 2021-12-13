@@ -6,6 +6,7 @@ const GET_PROYECTOS_LIDER = gql`
             ProyectosPorLider(id: $id){
                 id
                 nombre
+                presupuesto
                 objGeneral
                 objEspecificos
                 fechaInicio

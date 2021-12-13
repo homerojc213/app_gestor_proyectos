@@ -1,14 +1,22 @@
 import { gql} from '@apollo/client';
 
-
 const APROBARPROYECTO = gql `
-      mutation aprobarProyecto(
-        $_id: ID!,
-        ) {
+      mutation aprobarProyecto($id: ID!){
         aprobarProyecto(
-            _id: $_id
-        )
+            id: $id
+        ){
+            id
+            nombre
+            presupuesto
+            objGeneral
+            objEspecificos
+            fechaInicio
+            fechaFin
+            estadoProyecto
+            fase 
+        }
     }
 `;
-       
+
+
 export { APROBARPROYECTO };

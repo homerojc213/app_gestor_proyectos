@@ -5,8 +5,11 @@ const GET_PROYECTOS = gql`
             Proyectos {
                 id
                 nombre
+                objGeneral
+                objEspecificos
                 presupuesto
                 estadoProyecto
+                fase
             }
     }
 `;

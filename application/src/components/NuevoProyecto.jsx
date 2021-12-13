@@ -43,8 +43,16 @@ export const NuevoProyecto = () => {
             swal("Error", "Todos los campos son obligatorios", "error");
         }else{
             agregarProyecto();
+            clearForm();
+            
+            
         }
         
+    }
+
+
+    const clearForm = () => {
+        document.getElementById("crearProyecto").reset();
     }
 
     return (
@@ -58,7 +66,7 @@ export const NuevoProyecto = () => {
 
             <div className='form-nuevoProyecto'>
 
-            <form>
+            <form id="crearProyecto">
                 <div className="form-group">
                     <label htmlFor="nombre">Nombre del proyecto</label> 
                     <input type="text" className="form-control" id="nombre"  

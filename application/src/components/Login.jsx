@@ -31,8 +31,8 @@ export const Login = () => {
       if (login.token) {
         localStorage.setItem(AUTH_TOKEN, login.token);
         navigate('/');
-      }else {
-        swal("Error", "¡Ups! Usuario o contraseña incorrectos", "error");
+      }else if (!login.token && login.error) {
+        swal("Error", login.error, "error");
       }
 
     },
