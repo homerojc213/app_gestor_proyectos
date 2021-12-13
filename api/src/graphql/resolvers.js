@@ -17,7 +17,7 @@ export const resolvers = {
 
     Query: {
         Usuarios: (_, args, context) => {  //Context sirve para inyectar info desde una query a otra, en este caso se usa para validar el token
-            if(context.user.auth  && context.user.rol === 'Administrador'){
+            if(context.user.auth && context.user.rol === 'Administrador'){
                 return Usuario.find();
             }else{
                 throw new Error('No estas autorizado');
@@ -158,7 +158,7 @@ export const resolvers = {
 
         async aprobarProyecto( _, {id}, context) {
 
-            if(context.user.auth) { //Administrador aprueba un proyecto
+            if(context.user.auth && context.user.rol === 'Administrador') { //Administrador aprueba un proyecto
                 try {
                     return await Proyecto.findByIdAndUpdate(id, {
                         fechaInicio: hoy.toLocaleString(),

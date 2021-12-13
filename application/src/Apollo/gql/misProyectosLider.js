@@ -1,14 +1,13 @@
 import { gql} from '@apollo/client';
 
-const GET_PROYECTOS = gql`
+const PROYECTOS_LIDER = gql`
     query {
             Proyectos {
                 id
                 nombre
                 presupuesto
-                estadoProyecto
             }
     }
 `;
 
-export default GET_PROYECTOS;
+export default PROYECTOS_LIDER;
