@@ -158,7 +158,7 @@ export const resolvers = {
 
         async aprobarProyecto( _, {id}, context) {
 
-            if(context.user.auth && context.user.rol === 'Administrador') { //Administrador aprueba un proyecto
+            if(context.user.auth) { //Administrador aprueba un proyecto
                 try {
                     return await Proyecto.findByIdAndUpdate(id, {
                         fechaInicio: hoy.toLocaleString(),
