@@ -15,8 +15,7 @@ import { Login } from './components/Login';
 import { InscripcionProyecto } from './components/InscripcionProyecto';
 import { AprobarUsuarios } from './components/AprobarUsuarios';
 import PrivateRoute from './router/PrivateRoute';
-
-
+import { AprobarProyecto } from './components/AprobarProyecto';
 
 function App() {
   return (
@@ -25,7 +24,8 @@ function App() {
           <Route exact path="/" element={<Inicio />} />
           <Route path="/login" element={<Login />} />
 
-          <Route path="/proyectos" element={<PrivateRoute><Proyectos /></PrivateRoute>}/>
+          <Route path="Proyectos" element={<PrivateRoute><Proyectos /></PrivateRoute>} />
+          <Route path="/Proyectos/AprobarProyectos" element={<PrivateRoute><AprobarProyecto /></PrivateRoute>}/>
           <Route path="/NuevoProyecto" element={<PrivateRoute><NuevoProyecto /></PrivateRoute>}/>
           <Route path="/Usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>}/>
           <Route path="/InscripcionProyecto" element={<PrivateRoute><InscripcionProyecto /></PrivateRoute>}/>

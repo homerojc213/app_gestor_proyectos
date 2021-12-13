@@ -27,7 +27,7 @@ export const Navigation = () => {
 
                                 <Nav.Link href="/">Inicio</Nav.Link>
 
-                                <Nav.Link href="/proyectos">Proyectos</Nav.Link>
+                                <Nav.Link href="/Proyectos">Proyectos</Nav.Link>
 
                                 {role === 'Estudiante' && 
 
@@ -49,7 +49,9 @@ export const Navigation = () => {
                                     <NavDropdown.Item href="/Usuarios">Lista de usuarios</NavDropdown.Item>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item href="/AprobarUsuarios">Aprobar usuarios</NavDropdown.Item>
-                                    <NavDropdown.Item href="/AprobarProyectos">Aprobar proyectos</NavDropdown.Item>
+                                    <NavDropdown.Item 
+                                    onClick={()=>navigate(`/Proyectos/AprobarProyectos`)}
+                                    >Aprobar proyectos</NavDropdown.Item>
                                 </NavDropdown>
                                 }
 

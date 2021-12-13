@@ -163,12 +163,16 @@ export const resolvers = {
         async aprobarProyecto( _, {id}, context) {
 
             if(context.user.auth && context.user.rol === 'Administrador') { //Administrador aprueba un proyecto
-
-                return await Proyecto.findByIdAndUpdate(id, {
-                    fechaInicio: hoy.toLocaleString(),
-                    estadoProyecto: "Activo",
-                    fase: "Inicio"
-                })
+                try {
+                    return await Proyecto.findByIdAndUpdate(id, {
+                        fechaInicio: hoy.toLocaleString(),
+                        estadoProyecto: "Activo",
+                        fase: "Inicio"
+                    })
+                } catch (error) {
+                    console.error(error);
+                }
+                
             }else{
                 throw new Error('No estas autorizado');
             }

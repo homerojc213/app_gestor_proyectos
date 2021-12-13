@@ -6,6 +6,7 @@ const GET_PROYECTOS = gql`
                 id
                 nombre
                 presupuesto
+                estadoProyecto
             }
     }
 `;
