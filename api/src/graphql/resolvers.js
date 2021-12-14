@@ -22,6 +22,14 @@ export const resolvers = {
             } 
         },
 
+        UsuarioPorId: (_, { id }, context) => {
+            if(context.user.auth){
+                return Usuario.findById(id);
+            }else{
+                throw new Error('No estas autorizado');
+            }
+        },
+
         Proyectos: async (_, args, context) => { //Todos los proyectos
             if(context.user.auth){
             return await Proyecto.find();
@@ -114,21 +122,32 @@ export const resolvers = {
             
         },
 
-        async actualizarUsuario( _, { id, usuario }, context) {   //Usuario(de cualquier rol) modifica sus propios datos
+        async actualizarUsuario( _, { id, nombres, apellidos, identificacion, correo, clave}, context) {   //Usuario(de cualquier rol) modifica sus propios datos
 
             if(context.user.auth) {
 
                 return await Usuario.findByIdAndUpdate(id, {
-                    nombres: usuario.nombres,
-                    apellidos: usuario.apellidos,
-                    identificacion: usuario.identificacion,
-                    correo: usuario.correo,
-                    clave: bycript.hashSync(usuario.clave, salt)
+                    nombres: nombres,
+                    apellidos: apellidos,
+                    identificacion: identificacion,
+                    correo: correo
                 });
             }else{
                 throw new Error('No estas autorizado');
             }
 
+        },
+
+        async actualizarClave( _, { id, clave}, context) {   //Usuario(de cualquier rol) modifica su propia clave   
+
+            if(context.user.auth) {
+
+                return await Usuario.findByIdAndUpdate(id, {
+                    clave: bycript.hashSync(clave, salt)
+                });
+            }else{
+                throw new Error('No estas autorizado');
+            }
         },
         
         async eliminarUsuario( _, { id }, context) {

@@ -7,6 +7,7 @@ const typeDefs = `
 
     type Query {
         Usuarios: [Usuario]
+        UsuarioPorId(id: ID!): Usuario
         Proyectos: [Proyecto]
         ProyectosPorLider(id: ID!): [Proyecto]
         Inscripciones: [Inscripcion]
@@ -17,7 +18,8 @@ const typeDefs = `
         login(correo: String!, clave: String!): Token!
         agregarUsuario(nombres: String!, apellidos: String!, identificacion: String!, correo: String!, clave: String!, rol: String!): Usuario!
         aprobarUsuario(id: ID!): Usuario,
-        actualizarUsuario(id: ID!, usuario: UsuarioActInput): Usuario
+        actualizarUsuario(id: ID!, nombres: String!, apellidos: String!, identificacion: String!, correo: String!): Usuario!
+        actualizarClave(id: ID!, clave: String!): Usuario!
         eliminarUsuario(id: ID!): Usuario
         agregarProyecto(nombre: String!, presupuesto: Float!, objGeneral: String!, objEspecificos: [String]!, idLider: ID!) : Proyecto!
         aprobarProyecto(id: ID!): Proyecto
