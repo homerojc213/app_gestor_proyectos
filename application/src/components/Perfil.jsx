@@ -44,8 +44,7 @@ export const Perfil = () => {
             correo: formState.correo
         },
         onCompleted: () => {
-            swal("Actualizado", "Se actualizaron los datos correctamente", "success");
-            
+            window.location.reload(); //no es lo más eficiente :( pero funciona
         },
         onError: (error) => {
             swal("Error", error.message, "error");

@@ -16,36 +16,21 @@ export const MisProyectosLider = () => {
 
     const idLider = JSON.parse(window.atob(authToken.split('.')[1])).uid || "";
     const nombres = JSON.parse(window.atob(authToken.split('.')[1])).nombres || "";
-    const [proyectosActivos, setProyectosActivos] = useState([]);
 
 
-    const cargarDatos = new Promise(
-        async (resolve, rejected) => {
-            const { loading, error, data } = useQuery(GET_PROYECTOS_LIDER, {
-                variables: {
-                    id: idLider
-                }
-            });
-            resolve(data);
+
+    const  { loading, error, data } = useQuery(GET_PROYECTOS_LIDER, {
+        variables: {
+            id: idLider
         }
-    );
-    cargarDatos.then(
-        (data) => {
-            const datos = data.ProyectosPorLider.filter(proyecto => proyecto.estadoProyecto === 'Activo')
-            setProyectosActivos(datos);
+    });
 
-        }
-    );
-
-
-
-
-    // let proyectosActivos = [];
+    let proyectosActivos = [];
     let proyectosPendientes = [];
     let proyectosTerminados = [];
 
     if (data) {
-        // proyectosActivos = data.ProyectosPorLider.filter(proyecto => proyecto.estadoProyecto === 'Activo');
+        proyectosActivos = data.ProyectosPorLider.filter(proyecto => proyecto.estadoProyecto === 'Activo');
         proyectosPendientes = data.ProyectosPorLider.filter(proyecto => proyecto.fase === '');
         proyectosTerminados = data.ProyectosPorLider.filter(proyecto => proyecto.fase === 'Terminado');
     }
@@ -82,8 +67,8 @@ export const MisProyectosLider = () => {
 
                 <p>Hola {nombres}, esta es tu lista actual de proyectos</p>
 
-                {/* {loading && <p>Cargando...</p>}
-                {error && <p>Error al cargar tus proyectos :(</p>} */}
+                /* {loading && <p>Cargando...</p>}
+                {error && <p>Error al cargar tus proyectos :(</p>} */
 
                 <div className="row mt-5">
                     <h4>Proyectos Activos</h4>
