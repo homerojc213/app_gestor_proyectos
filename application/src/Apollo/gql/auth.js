@@ -14,7 +14,7 @@ const LOGIN = gql `
   `;
 
 const REGISTER= gql `
-      mutation agregarUsuario(
+      mutation agregarUsuarioRegister(
         $nombres: String!,
         $apellidos: String!
         $identificacion: String!,
@@ -23,7 +23,7 @@ const REGISTER= gql `
         $rol: String!
 
       ) {
-          agregarUsuario(nombres: $nombres, apellidos: $apellidos, identificacion: $identificacion, correo: $correo, clave: $clave, rol: $rol)
+          agregarUsuarioRegister(nombres: $nombres, apellidos: $apellidos, identificacion: $identificacion, correo: $correo, clave: $clave, rol: $rol)
         {
           nombres
           apellidos

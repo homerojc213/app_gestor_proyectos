@@ -38,6 +38,7 @@ export const Navigation = () => {
 
                                  <NavDropdown title="Estudiantes" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/InscripcionProyecto">Inscribirse a un proyecto</NavDropdown.Item>
+                                    <NavDropdown.Item href="/MisProyectosEstudiante">Mis Proyectos</NavDropdown.Item>
                                 </NavDropdown>
 
                                 }
@@ -46,6 +47,8 @@ export const Navigation = () => {
                                 <NavDropdown title="Lideres" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/NuevoProyecto">Nuevo proyecto</NavDropdown.Item>
                                     <NavDropdown.Item href="/MisProyectosLider">Mis proyectos</NavDropdown.Item>
+                                    <NavDropdown.Item href="/AprobarInscripciones">Aprobar inscripciones</NavDropdown.Item>
+
                                 </NavDropdown>
                                 }
 

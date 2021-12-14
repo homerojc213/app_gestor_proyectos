@@ -16,7 +16,8 @@ const typeDefs = `
 
     type Mutation {
         login(correo: String!, clave: String!): Token!
-        agregarUsuario(nombres: String!, apellidos: String!, identificacion: String!, correo: String!, clave: String!, rol: String!): Usuario!
+        agregarUsuarioRegister(nombres: String!, apellidos: String!, identificacion: String!, correo: String!, clave: String!, rol: String!): Usuario!
+        agregarUsuario(nombres: String!, apellidos: String!, identificacion: String!, correo: String!, clave: String!, rol: String!, estado: String!): Usuario!
         aprobarUsuario(id: ID!): Usuario,
         actualizarUsuario(id: ID!, nombres: String!, apellidos: String!, identificacion: String!, correo: String!): Usuario!
         actualizarClave(id: ID!, clave: String!): Usuario!
@@ -54,6 +55,7 @@ const typeDefs = `
         estadoProyecto: String
         fase: String
         avances: [Avance]
+        estudiantes: [Usuario]
     }
 
     type Usuario{

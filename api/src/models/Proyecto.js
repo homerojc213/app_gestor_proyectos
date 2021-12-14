@@ -41,7 +41,14 @@ const proyectoSchema = new Schema({
           ref: "Avance",
           required: true,
         }
-    ]
+    ],
+    estudiantes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Usuario",
+            required: true,
+        }
+    ],
 },
 {
     collection: 'Proyectos'

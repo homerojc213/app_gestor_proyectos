@@ -19,7 +19,7 @@ export const NuevoUsuario = () => {
 
     const [agregarUsuario] = useMutation(AGREGAR_USUARIO , {
         variables: {
-            nombres: formState.nombre,
+            nombres: formState.nombres,
             apellidos: formState.apellidos,
             identificacion: formState.identificacion,
             correo:formState.correo,
@@ -52,7 +52,7 @@ export const NuevoUsuario = () => {
         <>
             <Navigation />
         <div className="container text-left">
-            <h2>Nuevo Usuario</h2>
+            <h2>Nuevo usuario</h2>
 
             <p>En esta sección podrás crear un nuevo usuario</p>
 
@@ -87,14 +87,43 @@ export const NuevoUsuario = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="rol">Rol</label>
-                    <input type="text" className="form-control" id="rol" 
-                    onChange={e => setFormState({...formState, rol: e.target.value})}/>
+                    <select
+                    className="form-select"
+                    id = "rol"
+                    value={formState.rol}
+                    onChange={(e) =>
+                        setFormState({
+                        ...formState,
+                        rol: e.target.value
+                        })
+                    }
+                    >
+                    <option value="" disabled>Seleccione un rol</option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Lider">Lider</option>
+                    <option value="Estudiante">Estudiante</option>
+                    </select>
                 </div>
+
                 <div className="form-group">
                     <label htmlFor="estado">Estado</label>
-                    <input type="text" className="form-control" id="estado" 
-                    onChange={e => setFormState({...formState, estado: e.target.value})}/>
+                    <select
+                    className="form-select"
+                    id = "estado"
+                    value={formState.estado}
+                    onChange={(e) =>
+                        setFormState({
+                        ...formState,
+                        estado: e.target.value
+                        })
+                    }
+                    >
+                    <option value="" disabled>Seleccione un estado</option>
+                    <option value="Autorizado">Autorizado</option>
+                    <option value="Inactivo">Inactivo</option>
+                    </select>
                 </div>
+                
                 <button
                 type="submit" 
                 className="btn btn-submit mt-3"

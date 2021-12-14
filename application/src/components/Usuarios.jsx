@@ -7,19 +7,22 @@ import { AUTH_TOKEN } from '../constants';
 import { useNavigate } from 'react-router-dom';
 
 export const Usuarios = () => {
+
     const navigate = useNavigate();
-    const apollo = useQuery(GET_USUARIOS);
+
+    const authToken = localStorage.getItem(AUTH_TOKEN) || "";
+    const rol = JSON.parse(window.atob(authToken.split('.')[1])).rol || "";
+
     const [usuarios, setUsuarios] = useState([]);
-    const [rol, setRol] = useState('');
-    const authToken = localStorage.getItem(AUTH_TOKEN);
-    let token;
+
+    const  { loading, error, data } = useQuery(GET_USUARIOS);
+
     useEffect(() => {
-        if (apollo.data && authToken) {
-            setUsuarios(apollo.data.Usuarios);
-            token = JSON.parse(window.atob(authToken.split('.')[1]));
-            setRol(token.rol);
+        if (data) {
+            setUsuarios(data.Usuarios);
         }
-    }, [apollo.data]);
+    } , [data]);
+
 
     const nuevousuario = () => {
         navigate('/NuevoUsuario');
@@ -30,20 +33,20 @@ export const Usuarios = () => {
             <Navigation />
             <div className="container">
                 <br /><br />
-                {/* {loading && <p>Cargando...</p>}
-                {error && <p>Error</p>} */}
-                <Row xs={3} md={5} className="g-4">
+                {loading && <p>Cargando...</p>}
+                {error && <p>Error al cargar los usuarios</p>}
+                <Row xs={2} md={4} className="g-4">
                     {rol === 'Administrador' ? (
                         <div>
                             <Col>
                                 <Card>
                                     <Card.Img variant="top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW_ymGyjK60VWc89uuFt56e-mSiaPbqf4yTQ&usqp=CAU" />
                                     <Card.Body>
-                                        <Card.Title>Nuevo Usuario</Card.Title>
+                                        <Card.Title>Nuevo usuario</Card.Title>
                                         <Card.Text >
-                                           Ingrese un nuevo Usuario
+                                           Ingrese un nuevo usuario
                                            <br/><br/><br/>
-                                           <Button onClick={nuevousuario} variant="outline-primary">Nuevo Usuario</Button>{' '}
+                                           <Button onClick={nuevousuario} variant="outline-primary">Nuevo usuario</Button>{' '}
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
@@ -70,7 +73,6 @@ export const Usuarios = () => {
                                                 {rol === 'Administrador' ? (
                                                     <div>
                                                         <Button variant="outline-info">Editar</Button>{' '}
-                                                        <Button variant="outline-danger">Rechazar</Button>{' '}
                                                     </div>
                                                 ) : ''}
 

@@ -41,7 +41,7 @@ export const Login = () => {
     }
   });
 
-  const [agregarUsuario] = useMutation(REGISTER, {
+  const [agregarUsuarioRegister] = useMutation(REGISTER, {
     variables: {
       nombres: formState.nombres,
       apellidos: formState.apellidos,
@@ -76,7 +76,7 @@ export const Login = () => {
       if (formState.nombres === '' || formState.apellidos === '' || formState.identificacion === '' || formState.correo === '' || formState.clave === '' || formState.rol === '') {
         swal("Error", "¡Todos los campos son obligatorios!", "error");
       }else {
-        agregarUsuario();
+        agregarUsuarioRegister();
       }
      
     }

@@ -8,26 +8,30 @@ import { useNavigate } from 'react-router-dom';
 import { ELIMINAR_PROYECTO } from '../Apollo/gql/eliminarProyecto';
 import swal from 'sweetalert';
 export const Proyectos = () => {
+
     const navigate = useNavigate();
-    const apollo = useQuery(GET_PROYECTOS);
+
+    const authToken = localStorage.getItem(AUTH_TOKEN) || "";
+    const rol = JSON.parse(window.atob(authToken.split('.')[1])).rol || "";
+
     const [proyectos, setProyectos] = useState([]);
-    const [rol, setRol] = useState('');
-    const authToken = localStorage.getItem(AUTH_TOKEN);
-    let token;
+
+    const  { loading, error, data } = useQuery(GET_PROYECTOS);
+
     useEffect(() => {
-        if (apollo.data && authToken) {
-            setProyectos(apollo.data.Proyectos);
-            token = JSON.parse(window.atob(authToken.split('.')[1]));
-            setRol(token.rol);
+        if (data) {
+            setProyectos(data.Proyectos);
         }
-    }, [apollo.data]);
+    } , [data]);
+    
+
 
     const nuevoProyecto = () => {
         navigate('/nuevoProyecto');
     }
 
-    
 
+    
     const [eliminarProyecto] = useMutation(ELIMINAR_PROYECTO);
 
     const handlerEliminarProyecto = async (id) => {
@@ -49,10 +53,15 @@ export const Proyectos = () => {
     return (
         <>
             <Navigation />
-            <div className="container">
+            <div className="container text-center">
+
+                <h2>Proyectos activos</h2>
+
+
                 <br /><br />
-                {/* {loading && <p>Cargando...</p>}
-                {error && <p>Error</p>} */}
+                {loading && <p>Cargando...</p>}
+                {error && <p>Error al cargar los proyectos</p>}
+
                 <Row xs={1} md={3} className="g-4">
                     {rol === 'Lider' ? (
                         <div>
@@ -82,12 +91,11 @@ export const Proyectos = () => {
                                                 <Card.Title>{proyecto.nombre}</Card.Title>
                                                 <Card.Text >
                                                     <br />
-                                                    {"3/5 participantes"}
+                                                    <p>{proyecto.estudiantes.length} participantes </p>
                                                     <br /><br />
                                                     <div>
                                                         {rol === 'Administrador' ? (
                                                             <div>
-                                                                <Button variant="outline-primary">Ingresar</Button>{' '}
                                                                 <Button variant="outline-info">Info</Button>{' '}
                                                                 <Button variant="outline-danger"
                                                                     onClick={() => handlerEliminarProyecto(proyecto.id)}
@@ -107,7 +115,7 @@ export const Proyectos = () => {
 
                                                         {rol === 'Estudiante' ? (
                                                             <div>
-                                                                <Button variant="outline-primary">Participar</Button>{' '}
+                                                                <Button variant="outline-primary">Inscribirse</Button>{' '}
                                                                 <Button variant="outline-info">Info</Button>{' '}
                                                             </div>
                                                         ) : ''}

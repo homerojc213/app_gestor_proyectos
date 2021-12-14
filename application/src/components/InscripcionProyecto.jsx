@@ -2,6 +2,11 @@ import React from 'react'
 import { Navigation } from './Navigation'
 
 export const InscripcionProyecto = () => {
+
+    
+
+
+
     return (
         <>
             <Navigation />

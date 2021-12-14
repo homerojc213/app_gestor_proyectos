@@ -93,7 +93,7 @@ export const resolvers = {
             
         },
         
-        async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol }) {
+        async agregarUsuarioRegister( _, { nombres, apellidos, identificacion, correo, clave, rol }) {
 
                 const nusuario = new Usuario({
                     nombres: nombres,
@@ -108,6 +108,22 @@ export const resolvers = {
                 return await nusuario.save();
             
         },
+
+        async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol, estado }) {
+
+            const nusuario = new Usuario({
+                nombres: nombres,
+                apellidos: apellidos,
+                identificacion: identificacion,
+                correo: correo,
+                clave: bycript.hashSync(clave, salt),
+                rol: rol,
+                estado: estado
+            });
+
+            return await nusuario.save();
+        
+    },
 
         async aprobarUsuario( _, { id}, context) {   //Administrador aprueba un usuario nuevo
 
@@ -173,15 +189,14 @@ export const resolvers = {
                     idLider: idLider,
                     estadoProyecto: "Inactivo",
                     fase: "",
-                    avances: []
+                    avances: [],
+                    estudiantes: []
                 });
     
                 return await nproyecto.save();
             }else{
                 throw new Error('No estas autorizado');
             }
-            
-
           
         },
 
@@ -274,16 +289,26 @@ export const resolvers = {
         async aprobarInscripcion( _, {id}, context) { //Lider aprueba inscripción 
 
             if(context.user.auth && context.user.rol === 'Lider') {
-                return await Inscripcion.findByIdAndUpdate(id, {
+
+                Inscripcion.findByIdAndUpdate(id, {
                     estadoInscripcion: "Aprobado",
                     fechaIngreso: hoy.toLocaleString()
+                })
+                .then(inscripcion => {
+                    Proyecto.findById(inscripcion.idProyecto)
+                    .then(proyecto => {
+                        proyecto.estudiantes.push(inscripcion.idEstudiante);
+                        proyecto.save();
+                    })
+                })
+                .catch(error => {
+                    console.error(error);
                 })
             }else{
                 throw new Error('No estas autorizado');
             }
-
-        },   
-
+        },
+ 
         async eliminarInscripcion( _, { id }, context) {  //Lider elimina una inscripción
 
             if(context.user.auth && context.user.rol === 'Lider') {

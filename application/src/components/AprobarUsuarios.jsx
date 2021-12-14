@@ -54,7 +54,7 @@ export const AprobarUsuarios = () => {
                         {usuariosPorAprobar.length === 0 && <><p>No hay usuarios pendientes por aprobar</p></>}
                         {usuariosPorAprobar.length > 0 && 
                             usuariosPorAprobar.map(usuario => (
-                                <div className="col-md-4" key={usuario.id}>
+                                <div className="col-md-3" key={usuario.id}>
                                     <div className="card mb-3">
                                         <div className="card-header">
                                             <h5>{}</h5>

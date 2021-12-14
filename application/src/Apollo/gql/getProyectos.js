@@ -10,6 +10,10 @@ const GET_PROYECTOS = gql`
                 presupuesto
                 estadoProyecto
                 fase
+                estudiantes{
+                    id
+                    nombres
+                }
             }
     }
 `;

@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigation } from './Navigation'
 import { AUTH_TOKEN } from '../constants'
 import GET_PROYECTOS_LIDER from '../Apollo/gql/getProyectosLider'
@@ -25,14 +25,22 @@ export const MisProyectosLider = () => {
         }
     });
 
+    const [proyectos, setProyectos] = useState([]);
+
+    useEffect(() => {
+        if (data) {
+            setProyectos(data.ProyectosPorLider);
+        }
+    } , [data]);
+
     let proyectosActivos = [];
     let proyectosPendientes = [];
     let proyectosTerminados = [];
 
     if (data) {
-        proyectosActivos = data.ProyectosPorLider.filter(proyecto => proyecto.estadoProyecto === 'Activo');
-        proyectosPendientes = data.ProyectosPorLider.filter(proyecto => proyecto.fase === '');
-        proyectosTerminados = data.ProyectosPorLider.filter(proyecto => proyecto.fase === 'Terminado');
+        proyectosActivos = proyectos.filter(proyecto => proyecto.estadoProyecto === 'Activo') || [];
+        proyectosPendientes = proyectos.filter(proyecto => proyecto.fase === '') || [];
+        proyectosTerminados = proyectos.filter(proyecto => proyecto.fase === 'Terminado') || [];
     }
 
 
@@ -50,6 +58,7 @@ export const MisProyectosLider = () => {
             },
             onCompleted: () => {
                 swal("Proyecto Eliminado", "El proyecto ha sido eliminado", "success");
+                setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
             },
             onError: (error) => {
                 swal("Error", "El proyecto no ha sido eliminado", "error");
@@ -67,8 +76,8 @@ export const MisProyectosLider = () => {
 
                 <p>Hola {nombres}, esta es tu lista actual de proyectos</p>
 
-                /* {loading && <p>Cargando...</p>}
-                {error && <p>Error al cargar tus proyectos :(</p>} */
+                {loading && <p>Cargando...</p>}
+                {error && <p>Error al cargar tus proyectos :(</p>} 
 
                 <div className="row mt-5">
                     <h4>Proyectos Activos</h4>
@@ -77,15 +86,17 @@ export const MisProyectosLider = () => {
                     {proyectosActivos.length > 0 &&
                         proyectosActivos.map(proyecto => (
                             <div className="col-md-4" key={proyecto.id}>
-                                <div className="card mb-3">
+                                <div className="card mb-3 h-100">
                                     <div className="card-body">
                                         <h5 className="card-title">{proyecto.nombre}</h5>
                                         <p className="card-text">Presupuesto: {proyecto.presupuesto}</p>
                                         <p className="card-text">Objetivo general: {proyecto.objGeneral}</p>
                                         <p className="card-text">Fecha de inicio: {proyecto.fechaInicio}</p>
                                     </div>
-                                    <button className="btn btn-primary" onClick={() => navigate(`/AvancesProyecto/${proyecto.id}`)}>Ver avances del proyecto</button>
-                                    <button className="btn btn-danger" onClick={() => handlerEliminarProyecto(proyecto.id)}>Eliminar proyecto</button>
+                                    <div className="card-footer">
+                                    <button className="btn btn-primary m-1" onClick={() => navigate(`/AvancesProyecto/${proyecto.id}`)}>Ver avances del proyecto</button>
+                                    <button className="btn btn-danger m-1" onClick={() => handlerEliminarProyecto(proyecto.id)}>Eliminar proyecto</button>
+                                    </div>
                                 </div>
                             </div>
                         ))
@@ -102,11 +113,14 @@ export const MisProyectosLider = () => {
                     {proyectosPendientes.length > 0 &&
                         proyectosPendientes.map(proyecto => (
                             <div className="col-md-4" key={proyecto.id}>
-                                <div className="card mb-3">
+                                <div className="card mb-3 h-100">
                                     <div className="card-body">
                                         <h5 className="card-title">{proyecto.nombre}</h5>
                                         <p className="card-text">Presupuesto: {proyecto.presupuesto}</p>
                                         <p className="card-text">Objetivo general: {proyecto.objGeneral}</p>
+                                    </div>
+                                    <div className="card-footer">
+                                    <button className="btn btn-danger m-1" onClick={() => handlerEliminarProyecto(proyecto.id)}>Eliminar proyecto</button>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +137,7 @@ export const MisProyectosLider = () => {
                     {proyectosTerminados.length > 0 &&
                         proyectosTerminados.map(proyecto => (
                             <div className="col-md-4" key={proyecto.id}>
-                                <div className="card mb-3">
+                                <div className="card mb-3 h-100">
                                     <div className="card-body">
                                         <h5 className="card-title">{proyecto.nombre}</h5>
                                         <p className="card-text">Presupuesto: {proyecto.presupuesto}</p>
