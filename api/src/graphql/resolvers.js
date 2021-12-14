@@ -245,7 +245,8 @@ export const resolvers = {
 
         async eliminarProyecto( _, { id }, context) {
                 
-                if(context.user.auth && context.user.rol === 'Lider') { //Lider elimina un proyecto
+                if(context.user.auth && (context.user.rol === 'Administrador' || context.user.rol === 'Lider') ) { //Lider elimina un proyecto
+                    console.log(Proyecto.findByIdAndDelete(id))
                     return await Proyecto.findByIdAndDelete(id);
                 }else{
                     throw new Error('No estas autorizado');
