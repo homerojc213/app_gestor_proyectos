@@ -70,7 +70,7 @@ export const Usuarios = () => {
                                                 {rol === 'Administrador' ? (
                                                     <div>
                                                         <Button variant="outline-info">Editar</Button>{' '}
-                                                        <Button variant="outline-danger">Aprobar</Button>{' '}
+                                                        <Button variant="outline-danger">Rechazar</Button>{' '}
                                                     </div>
                                                 ) : ''}
 
