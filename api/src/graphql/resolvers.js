@@ -59,13 +59,9 @@ export const resolvers = {
                 const inscripcion = await Inscripcion.findOne({idEstudiante: args.idUsuario, idProyecto: args.idProyecto});
 
                 if(!inscripcion){
-                    return "Inexistente";
+                    return false;
                 }else{
-                    if(inscripcion.estadoInscripcion === 'Aprobado'){
-                        return "Aprobado";
-                    }else{
-                        return "Pendiente";
-                    }
+                    return true;
                 }
             
             
@@ -127,7 +123,9 @@ export const resolvers = {
             
         },
 
-        async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol, estado }) {
+        async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol, estado }, context) {
+
+            if(context.user.auth && context.user.rol === 'Administrador'){
 
             const nusuario = new Usuario({
                 nombres: nombres,
@@ -140,6 +138,9 @@ export const resolvers = {
             });
 
             return await nusuario.save();
+            }else{
+                throw new Error('No estas autorizado');
+            }
         
     },
 

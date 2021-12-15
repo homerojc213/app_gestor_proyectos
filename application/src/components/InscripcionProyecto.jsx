@@ -11,8 +11,6 @@ import swal from 'sweetalert';
 
 export const InscripcionProyecto = () => {
 
-    const [estadoInscripcion, setEstadoInscripcion] = useState("");
-
 
     const authToken = localStorage.getItem(AUTH_TOKEN) || "";
     const idEstudiante = JSON.parse(window.atob(authToken.split('.')[1])).uid || "";
@@ -38,45 +36,27 @@ export const InscripcionProyecto = () => {
                 idProyecto: idProyecto,
                 idUsuario: idEstudiante
             }
-        }).then(res => {
-            if (res.data.ValidarInscripcion == "Pendiente"){
-                setEstadoInscripcion("Pendiente");
-            }else if(res.data.ValidarInscripcion == "Aprobado"){
-                setEstadoInscripcion("Aprobado");
-            }else if(res.data.ValidarInscripcion == "Inexistente"){
-               setEstadoInscripcion("Inexistente");
+        })
+        .then(res => {
+            if (res.data.ValidarInscripcion) {
+                swal("Ya estas inscrito en este proyecto", "", "error");
+            }else{
+                swal("Inscripcion exitosa", "", "success");
             }
 
-        }).catch(err => {
-            console.log(err);
+        })
+        .catch(err => {
+            swal("Error al validar tu inscripción actual", "", "error");
         });
     }
 
+
     const handleInscripcion = async (id) => {
 
-        validarInscripcionUser(id);
+        validarInscripcionUser(id)
+        
+        
 
-        if (estadoInscripcion == "Pendiente"){
-            swal("Inscripción Pendiente", "Ya estás inscrito en este proyecto", "warning");
-        }else if(estadoInscripcion == "Aprobado"){
-            swal("Ya estás inscripto", "No puedes volver a intentar inscribirte", "success");
-        }else if(estadoInscripcion == "Inexistente"){
-
-            await agregarInscripcion({
-                variables: {
-                    idProyecto: id,
-                    idUsuario: idEstudiante
-                },
-                onCompleted: () => {
-                    swal("Solicitud", "Se ha enviado tu solicitud de inscripción, debes esperar la aprobación por parte del lider", "success");
-                    setEstadoInscripcion("Pendiente");
-                },
-                onError: () => {
-                    swal("Error", "No se ha podido procesar tu solicitud", "error");
-                }
-            });
-           
-        }
     }
 
     return (
