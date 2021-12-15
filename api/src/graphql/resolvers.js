@@ -52,6 +52,24 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             }
         },
+
+        ValidarInscripcion: async (_, args, context) => {  
+            //Verificar si un usuario esta inscripto en un proyecto  
+           
+                const inscripcion = await Inscripcion.findOne({idEstudiante: args.idUsuario, idProyecto: args.idProyecto});
+
+                if(!inscripcion){
+                    return "Inexistente";
+                }else{
+                    if(inscripcion.estadoInscripcion === 'Aprobado'){
+                        return "Aprobado";
+                    }else{
+                        return "Pendiente";
+                    }
+                }
+            
+            
+        },
         
         AvancesPorProyecto: (_, args, context) => {   //Todos los avances por proyecto
             if(context.user.auth) {
@@ -269,14 +287,14 @@ export const resolvers = {
                 
         },
 
-        async agregarInscripcion( _, { inscripcion }, context) {
+        async agregarInscripcion( _, { idProyecto, idUsuario }, context) {
 
             if(context.user.auth) {
                 const ninscripcion = new Inscripcion({
                     estadoInscripcion: "En proceso",
                     fechaIngreso: "",
-                    idProyecto: inscripcion.idProyecto,
-                    idEstudiante: inscripcion.idEstudiante
+                    idProyecto: idProyecto,
+                    idEstudiante: idUsuario
                 });
     
                 return await ninscripcion.save();
@@ -287,6 +305,9 @@ export const resolvers = {
         },
 
         async aprobarInscripcion( _, {id}, context) { //Lider aprueba inscripción 
+
+            let tiempoTranscurrido = Date.now();
+            let hoy = new Date(tiempoTranscurrido);
 
             if(context.user.auth && context.user.rol === 'Lider') {
 
@@ -322,6 +343,10 @@ export const resolvers = {
         async agregarAvance( _, { idProyecto, descripcion }, context) {  //Estudiante agrega un avance
 
             if(context.user.auth && context.user.rol === 'Estudiante') {
+
+                let tiempoTranscurrido = Date.now();
+                let hoy = new Date(tiempoTranscurrido);
+
                 const navance = new Avance({
                     descripcion: descripcion,
                     fecha_avance: hoy.toLocaleString(),
@@ -348,6 +373,7 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             }
 
+        
             
         },
 

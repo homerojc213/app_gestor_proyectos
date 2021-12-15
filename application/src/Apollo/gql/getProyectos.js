@@ -5,6 +5,7 @@ const GET_PROYECTOS = gql`
             Proyectos {
                 id
                 nombre
+                fechaInicio
                 objGeneral
                 objEspecificos
                 presupuesto

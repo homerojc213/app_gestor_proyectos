@@ -7,34 +7,21 @@ const rol = JSON.parse(window.atob(authToken.split('.')[1])).rol || "";
 
 
 const PrivateRoute = ({ children }) => {
-  return (
-    <div>
-      {authToken ? children : <Navigate to="/" />}
-    </div>
-  );
+  return authToken ? children : <Navigate to="/" />
 };
 
 const PrivateRouteAdmin = ({ children }) => {
-  return (
-    <div>
-      {rol === "Administrador" ? children : <Navigate to="/" />}
-    </div>
-  );
+  return rol === "Administrador" ? children : <Navigate to="/" />
+
 };
 const PrivateRouteEstudiante = ({ children }) => {
-  return (
-    <div>
-      {rol === "Estudiante" ? children : <Navigate to="/" />}
-    </div>
-  );
+ return rol === "Estudiante" ? children : <Navigate to="/" />
+
 };
 
 const PrivateRouteLider = ({ children }) => {
-  return (
-    <div>
-      {rol === "Lider" ? children : <Navigate to="/" />}
-    </div>
-  );
+  return rol === "Lider" ? children : <Navigate to="/" />
+
 };
 
 export { PrivateRoute, PrivateRouteAdmin, PrivateRouteEstudiante, PrivateRouteLider };

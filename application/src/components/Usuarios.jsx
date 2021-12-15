@@ -33,8 +33,10 @@ export const Usuarios = () => {
             <Navigation />
             <div className="container">
                 <br /><br />
+                
                 {loading && <p>Cargando...</p>}
                 {error && <p>Error al cargar los usuarios</p>}
+
                 <Row xs={2} md={4} className="g-4">
                     {rol === 'Administrador' ? (
                         <div>
@@ -43,7 +45,7 @@ export const Usuarios = () => {
                                     <Card.Img variant="top" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQW_ymGyjK60VWc89uuFt56e-mSiaPbqf4yTQ&usqp=CAU" />
                                     <Card.Body>
                                         <Card.Title>Nuevo usuario</Card.Title>
-                                        <Card.Text >
+                                        <Card.Text as = 'div' >
                                            Ingrese un nuevo usuario
                                            <br/><br/><br/>
                                            <Button onClick={nuevousuario} variant="outline-primary">Nuevo usuario</Button>{' '}
@@ -66,7 +68,7 @@ export const Usuarios = () => {
                                         <tr>Email: {usuario.correo}</tr>
                                         <tr>Rol: {usuario.rol}</tr>
                                         <tr>Estado: {usuario.estado}</tr>
-                                        <Card.Text >
+                                        <Card.Text as = 'div'>
                                             <div>
                                                 {//Solo el administrador puede consultar los usuarios y crear nuevos usuarios 
                                                 }

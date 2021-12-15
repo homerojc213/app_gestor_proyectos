@@ -2,7 +2,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import GET_PROYECTOS from '../Apollo/gql/getProyectos';
 import { Navigation } from './Navigation';
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
 import { AUTH_TOKEN } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import { ELIMINAR_PROYECTO } from '../Apollo/gql/eliminarProyecto';
@@ -29,7 +29,6 @@ export const Proyectos = () => {
     const nuevoProyecto = () => {
         navigate('/nuevoProyecto');
     }
-
 
     
     const [eliminarProyecto] = useMutation(ELIMINAR_PROYECTO);
@@ -59,8 +58,10 @@ export const Proyectos = () => {
 
 
                 <br /><br />
-                {loading && <p>Cargando...</p>}
-                {error && <p>Error al cargar los proyectos</p>}
+                <div>
+                {loading && <h2>Cargando...</h2>}
+                {error && <h2>Error al cargar los proyectos</h2>}
+                </div>
 
                 <Row xs={1} md={3} className="g-4">
                     {rol === 'Lider' ? (
@@ -70,7 +71,7 @@ export const Proyectos = () => {
                                     <Card.Img variant="top" src="https://economipedia.com/wp-content/uploads/Inicio-de-un-proyecto.jpg" />
                                     <Card.Body>
                                         <Card.Title>Nuevo Proyecto</Card.Title>
-                                        <Card.Text >
+                                        <Card.Text as = 'div' >
                                             Ingrese un nuevo proyecto
                                             <br /><br /><br />
                                             <Button onClick={nuevoProyecto} variant="outline-primary">Nuevo Proyecto</Button>{' '}
@@ -89,9 +90,23 @@ export const Proyectos = () => {
                                             <Card.Img variant="top" src="https://economipedia.com/wp-content/uploads/Inicio-de-un-proyecto.jpg" />
                                             <Card.Body>
                                                 <Card.Title>{proyecto.nombre}</Card.Title>
-                                                <Card.Text >
+                                                <Card.Text as = 'div' >
                                                     <br />
-                                                    <p>{proyecto.estudiantes.length} participantes </p>
+                                                    <ListGroup>
+                                                    <ListGroup.Item>Participantes: {proyecto.estudiantes.length}</ListGroup.Item>
+                                                    <ListGroup.Item>Fecha de inicio: {proyecto.fechaInicio}</ListGroup.Item>
+                                                    <ListGroup.Item>Objetivo general: {proyecto.objGeneral}</ListGroup.Item>
+                                                    <ListGroup.Item>Objetivos especificos: {proyecto.objEspecificos.map((obj,index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                {obj}
+                                                            </div>
+                                                        )
+                                                    })}</ListGroup.Item>
+
+                                                </ListGroup>
+                                                   
+                                            
                                                     <br /><br />
                                                     <div>
                                                         {rol === 'Administrador' ? (

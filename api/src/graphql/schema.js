@@ -1,7 +1,6 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { resolvers } from "./resolvers";
 
-
 // el signo ! significa que el argumento es obligatorio
 const typeDefs = `   
 
@@ -11,6 +10,7 @@ const typeDefs = `
         Proyectos: [Proyecto]
         ProyectosPorLider(id: ID!): [Proyecto]
         Inscripciones: [Inscripcion]
+        ValidarInscripcion(idProyecto: ID!, idUsuario: ID!): String
         AvancesPorProyecto(id: ID!): [Avance]
     }
 
@@ -27,7 +27,7 @@ const typeDefs = `
         terminarProyecto(id: ID!): Proyecto
         actualizarProyecto(id: ID!, proyecto: ProyectoActInput): Proyecto 
         eliminarProyecto(id: ID!): Proyecto
-        agregarInscripcion(inscripcion: InscripcionInput): Inscripcion
+        agregarInscripcion(idProyecto: ID!, idUsuario: ID!): Inscripcion!
         aprobarInscripcion(id: ID!): Inscripcion
         eliminarInscripcion(id: ID!): Inscripcion
         agregarAvance(idProyecto: ID!, descripcion: String!): Proyecto
@@ -111,11 +111,7 @@ const typeDefs = `
         objEspecificos: [String]
     }
 
-    input InscripcionInput {
-        idProyecto: ID!,
-        idEstudiante: ID!
-    }
-
+  
     
 
 
