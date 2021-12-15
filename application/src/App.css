@@ -1,0 +1,56 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  font-family: 'Readex Pro', sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.container-login{
+  background-color: rgb(34, 52, 77);
+  background-image: linear-gradient(
+      115deg,
+      rgba(73, 105, 150, 0.8),
+      rgba(212, 113, 51, 0.527)
+    ),
+    url(./images/Background.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100vh;
+  width: 100%;
+}
+
+.btn-login{
+  background-color: rgb(28, 40, 58);
+  border-color: rgb(190, 190, 190);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.btn-login:hover{
+  color:rgba(212, 113, 51, 0.527)
+}
+
+.form-nuevoProyecto{
+  max-width: 500px;
+  border: 1px dotted rgb(97, 91, 91);
+  margin: auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-family: 'Rubik', sans-serif;
+}
+
+.btn-submit{
+  background-color: rgb(212, 113, 51);
+  border-color: rgb(126, 75, 43);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}

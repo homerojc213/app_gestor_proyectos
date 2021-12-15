@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Rubik', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: 'Rubik', sans-serif;
+}
