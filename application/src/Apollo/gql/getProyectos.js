@@ -10,6 +10,11 @@ const GET_PROYECTOS = gql`
                 objEspecificos
                 presupuesto
                 estadoProyecto
+                idLider{
+                    id
+                    nombres
+                    apellidos
+                }
                 fase
                 estudiantes{
                     id

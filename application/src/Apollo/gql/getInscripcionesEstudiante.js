@@ -9,7 +9,11 @@ const GET_INSCRIPCIONES_ESTUDIANTE = gql`
                 id
                 idProyecto{
                     id
+                    nombre
+                    fechaInicio
                 }
+                estadoInscripcion
+                fechaIngreso
             }
         }
     `;

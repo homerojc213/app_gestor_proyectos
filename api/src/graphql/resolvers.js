@@ -32,7 +32,7 @@ export const resolvers = {
 
         Proyectos: async (_, args, context) => { //Todos los proyectos
             if(context.user.auth){
-            return await Proyecto.find();
+            return await Proyecto.find().populate('idLider');
             }else{
                 throw new Error('No estas autorizado');
             }
@@ -117,7 +117,7 @@ export const resolvers = {
             
         },
         
-        async agregarUsuarioRegister( _, { nombres, apellidos, identificacion, correo, clave, rol }) {
+        async agregarUsuarioRegister( _, { nombres, apellidos, identificacion, correo, clave, rol }) { //Autoegistro de usuario
 
                 const nusuario = new Usuario({
                     nombres: nombres,
@@ -133,7 +133,7 @@ export const resolvers = {
             
         },
 
-        async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol, estado }, context) {
+        async agregarUsuario( _, { nombres, apellidos, identificacion, correo, clave, rol, estado }, context) { //Registro de usuario por admin
 
             if(context.user.auth && context.user.rol === 'Administrador'){
 
