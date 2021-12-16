@@ -11,12 +11,12 @@ const inscripcionSchema = new Schema({
         type: String
     },
     idProyecto: {
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Proyecto'
     },
     idEstudiante: {
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Usuario'
     }
     
 },

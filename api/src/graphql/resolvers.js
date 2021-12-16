@@ -54,7 +54,8 @@ export const resolvers = {
         },
 
         ValidarInscripcion: async (_, args, context) => {  
-            //Verificar si un usuario esta inscripto en un proyecto  
+            //Verificar si un usuario esta inscripto en un proyecto 
+            if(context.user.auth){ 
            
                 const inscripcion = await Inscripcion.findOne({idEstudiante: args.idUsuario, idProyecto: args.idProyecto});
 
@@ -63,8 +64,17 @@ export const resolvers = {
                 }else{
                     return true;
                 }
-            
-            
+            }else{
+                throw new Error('No estas autorizado');
+            }
+        
+        },
+        InscripcionesPorEstudiante: (_, args, context) => {  //Ver las inscripciones de un estudiante
+            if(context.user.auth) {
+                return Inscripcion.find({idEstudiante: args.id}).populate('idProyecto');
+            }else{
+                throw new Error('No estas autorizado');
+            }
         },
         
         AvancesPorProyecto: (_, args, context) => {   //Todos los avances por proyecto
