@@ -24,6 +24,7 @@ import { Perfil } from './components/Perfil';
 import { MisProyectosEstudiante } from './components/MisProyectosEstudiante';
 import { NuevoAvance } from './components/NuevoAvance';
 import { AprobarInscripciones } from './components/AprobarInscripciones';
+import { MisInscripciones } from './components/MisInscripciones';
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
       
           <Route path="/InscripcionProyecto" element={<PrivateRouteEstudiante><InscripcionProyecto /></PrivateRouteEstudiante>}/>
           <Route path="/MisProyectosEstudiante" element={<PrivateRouteEstudiante><MisProyectosEstudiante /></PrivateRouteEstudiante>}/>
+          <Route path="/MisInscripciones" element={<PrivateRouteEstudiante><MisInscripciones /></PrivateRouteEstudiante>}/>
           <Route path="/NuevoAvance" element={<PrivateRouteEstudiante><NuevoAvance /></PrivateRouteEstudiante>}/>
           
           

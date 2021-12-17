@@ -14,10 +14,13 @@ export const MisProyectosLider = () => {
 
     const authToken = localStorage.getItem(AUTH_TOKEN);
 
-    const idLider = JSON.parse(window.atob(authToken.split('.')[1])).uid || "";
-    const nombres = JSON.parse(window.atob(authToken.split('.')[1])).nombres || "";
+    let idLider = "";
+    let nombres = "";
 
-
+    if(authToken) {
+        idLider = JSON.parse(window.atob(authToken.split('.')[1])).uid || "";
+        nombres = JSON.parse(window.atob(authToken.split('.')[1])).nombres || "";
+    }
 
     const  { loading, error, data } = useQuery(GET_PROYECTOS_LIDER, {
         variables: {

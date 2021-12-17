@@ -1,8 +1,8 @@
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import GET_PROYECTOS from '../Apollo/gql/getProyectos';
 import { INSCRIBIRSE_PROYECTO } from '../Apollo/gql/inscribirseProyecto';
-import { VALIDAR_INSCRIPCION } from '../Apollo/gql/validarInscripcion';
+import { GET_INSCRIPCIONES_ESTUDIANTE } from '../Apollo/gql/getInscripcionesEstudiante';
 
 import { Navigation } from './Navigation';
 import { Row, Col, Card, Button, ListGroup } from 'react-bootstrap';
@@ -18,46 +18,63 @@ export const InscripcionProyecto = () => {
 
     const [proyectos, setProyectos] = useState([]);
 
-    const  { loading, error, data } = useQuery(GET_PROYECTOS);
+    const [inscripciones, setInscripciones] = useState([]);
+
+    const { data:listaInscripciones } = useQuery(GET_INSCRIPCIONES_ESTUDIANTE, {
+        variables: { id: idEstudiante },
+    });
+
+
+    const  { loading, error, data:listaProyectos } = useQuery(GET_PROYECTOS);
 
     useEffect(() => {
-        if (data) {
-            setProyectos(data.Proyectos);
+        if (listaProyectos) {
+            setProyectos(listaProyectos.Proyectos);
         }
-    } , [data]);
+    }, [listaProyectos]);
+    
+
+    useEffect(() => {
+        if (listaInscripciones) {
+            setInscripciones(listaInscripciones.InscripcionesPorEstudiante);
+        }
+    } , [listaInscripciones]);
+
+
+    let proyectosInscritos = inscripciones.filter(inscripcion => inscripcion.id);
+
+    const isInscrito = (idProyecto) => {
+        return proyectosInscritos.find(inscripcion => inscripcion.idProyecto.id === idProyecto);
+    }
+  
+
 
     const [agregarInscripcion] = useMutation(INSCRIBIRSE_PROYECTO);
 
-    const [ValidarInscripcion, result] = useLazyQuery(VALIDAR_INSCRIPCION);
-
-    const validarInscripcionUser = (idProyecto) => {
-        ValidarInscripcion({
-            variables: {
-                idProyecto: idProyecto,
-                idUsuario: idEstudiante
-            }
-        })
-        .then(res => {
-            if (res.data.ValidarInscripcion) {
-                swal("Ya estas inscrito en este proyecto", "", "error");
-            }else{
-                swal("Inscripcion exitosa", "", "success");
-            }
-
-        })
-        .catch(err => {
-            swal("Error al validar tu inscripción actual", "", "error");
-        });
-    }
-
 
     const handleInscripcion = async (id) => {
+        await isInscrito(id) ? 
+        swal("Error", "Ya estás inscrito o tienes una inscripción pendiente para este proyecto", "error") :
+        await agregarInscripcion({
+            variables: {
+                idProyecto: id,
+                idUsuario: idEstudiante
+            },
+            onCompleted: () => {
+                swal("Inscripción exitosa, debes esperar su aprobación por parte del lider del proyecto", "", "success");
+                setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
 
-        validarInscripcionUser(id)
-        
-        
-
+            },
+            onError: (error) => {
+                swal("Error", error.message, "error");
+            }
+        });
+    
     }
+
+
+
+   
 
     return (
         <>
@@ -69,7 +86,8 @@ export const InscripcionProyecto = () => {
             <br /><br />
                 {loading && <p>Cargando...</p>}
                 {error && <p>Error al cargar los proyectos</p>}
-           
+
+            
                 <Row xs={1} md={3} className="g-4">
                     {(proyectos[0] != null) && proyectos.map(proyecto => {
                         if (proyecto.estadoProyecto === 'Activo') {
@@ -82,7 +100,7 @@ export const InscripcionProyecto = () => {
                                                 <Card.Title>{proyecto.nombre}</Card.Title>
                                                 <Card.Text as = 'div'>
                                                 <ListGroup>
-                                                    <ListGroup.Item>Participantes: {proyecto.estudiantes.length}</ListGroup.Item>
+                                                    <ListGroup.Item>Líder: {proyecto.idLider.nombres} {proyecto.idLider.apellidos}</ListGroup.Item>
                                                     <ListGroup.Item>Fecha de inicio: {proyecto.fechaInicio}</ListGroup.Item>
                                                     <ListGroup.Item>Objetivo general: {proyecto.objGeneral}</ListGroup.Item>
                                                     <ListGroup.Item>Objetivos especificos: {proyecto.objEspecificos.map((obj,index) => {

@@ -23,7 +23,7 @@ export const Navigation = () => {
         <div>
              <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">
+                    <Navbar.Brand>
                         <img src={logo} alt="logo" />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -39,6 +39,7 @@ export const Navigation = () => {
                                  <NavDropdown title="Estudiantes" id="basic-nav-dropdown">
                                     <NavDropdown.Item href="/InscripcionProyecto">Inscribirse a un proyecto</NavDropdown.Item>
                                     <NavDropdown.Item href="/MisProyectosEstudiante">Mis Proyectos</NavDropdown.Item>
+                                    <NavDropdown.Item href="/MisInscripciones">Mis Inscripciones</NavDropdown.Item>
                                 </NavDropdown>
 
                                 }
