@@ -46,8 +46,8 @@ export const resolvers = {
         },
 
         Inscripciones: (_, args, context) => {  //Todas las inscripciones
-            if(context.user.auth && context.user.rol === 'Lider') {
-                return Inscripcion.find();
+            if(context.user.auth) {
+                return Inscripcion.find().populate('idProyecto').populate('idEstudiante');
             }else{
                 throw new Error('No estas autorizado');
             }
@@ -76,7 +76,15 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             }
         },
-        
+
+        InscripcionesPorProyecto: (_, args, context) => {  //Ver las inscripciones de un proyecto
+            if(context.user.auth) {
+                return Inscripcion.find({idProyecto: args.id}).populate('idEstudiante').populate('idProyecto');
+            }else{
+                throw new Error('No estas autorizado');
+            }
+        },
+
         AvancesPorProyecto: (_, args, context) => {   //Todos los avances por proyecto
             if(context.user.auth) {
                 return Avance.find({idProyecto: args.id});
@@ -195,8 +203,7 @@ export const resolvers = {
             }
         },
         
-        async eliminarUsuario( _, { id }, context) {
-
+        async eliminarUsuario( _, { id }, context) {   //Administrador elimina un usuario
             if(context.user.auth && context.user.rol === 'Administrador') {
                 return await Usuario.findByIdAndDelete(id);
             }else{
@@ -235,7 +242,7 @@ export const resolvers = {
             let tiempoTranscurrido = Date.now();
             let hoy = new Date(tiempoTranscurrido);
 
-            if(context.user.auth) { //Administrador aprueba un proyecto
+            if(context.user.auth && context.user.rol === 'Administrador') {
                 try {
                     return await Proyecto.findByIdAndUpdate(id, {
                         fechaInicio: hoy.toLocaleString(),
@@ -343,7 +350,7 @@ export const resolvers = {
  
         async eliminarInscripcion( _, { id }, context) {  //Lider elimina una inscripción
 
-            if(context.user.auth && context.user.rol === 'Lider') {
+            if(context.user.auth && (context.user.rol === 'Lider' || context.user.rol === 'Estudiante') ) {
                 return await Inscripcion.findByIdAndDelete(id);
             }else{
                 throw new Error('No estas autorizado');

@@ -15,11 +15,7 @@ const GET_PROYECTOS = gql`
                     nombres
                     apellidos
                 }
-                fase
-                estudiantes{
-                    id
-                    nombres
-                }
+               
             }
     }
 `;

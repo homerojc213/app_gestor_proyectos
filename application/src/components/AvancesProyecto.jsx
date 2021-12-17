@@ -35,7 +35,11 @@ export const AvancesProyecto = () => {
                 {loading && <p>Cargando...</p>}
                 {error && <p>Error al cargar los avances del proyecto :(</p>}
 
-                <table className="table mt-3">
+                {avances.length === 0 && <p>No hay avances para este proyecto</p>}
+
+                {avances.length > 0 &&
+
+                <table className="table table-responsive mt-3">
                     <thead>
                         <tr class="table-primary">
                             <th scope="col">Fecha</th>
@@ -58,6 +62,7 @@ export const AvancesProyecto = () => {
                         ))}
                     </tbody>
                 </table>
+                }
 
 
             </div>

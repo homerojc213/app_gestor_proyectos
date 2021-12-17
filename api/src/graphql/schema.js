@@ -11,6 +11,7 @@ const typeDefs = `
         ProyectosPorLider(id: ID!): [Proyecto]
         Inscripciones: [Inscripcion]
         InscripcionesPorEstudiante(id: ID!): [Inscripcion]
+        InscripcionesPorProyecto(id: ID!): [Inscripcion]
         ValidarInscripcion(idProyecto: ID!, idUsuario: ID!): Boolean
         AvancesPorProyecto(id: ID!): [Avance]
     }

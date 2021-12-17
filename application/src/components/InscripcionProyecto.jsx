@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import GET_PROYECTOS from '../Apollo/gql/getProyectos';
 import { INSCRIBIRSE_PROYECTO } from '../Apollo/gql/inscribirseProyecto';
@@ -54,14 +54,14 @@ export const InscripcionProyecto = () => {
 
     const handleInscripcion = async (id) => {
         await isInscrito(id) ? 
-        swal("Error", "Ya estás inscrito o te has intentado inscribir antes a este proyecto", "error") :
+        swal("Error", "Ya estás inscrito o tienes una inscripción pendiente para este proyecto", "error") :
         await agregarInscripcion({
             variables: {
                 idProyecto: id,
                 idUsuario: idEstudiante
             },
             onCompleted: () => {
-                swal("Inscripción exitosa", "", "success");
+                swal("Inscripción exitosa, debes esperar su aprobación por parte del lider del proyecto", "", "success");
                 setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
 
             },
@@ -100,7 +100,7 @@ export const InscripcionProyecto = () => {
                                                 <Card.Title>{proyecto.nombre}</Card.Title>
                                                 <Card.Text as = 'div'>
                                                 <ListGroup>
-                                                    <ListGroup.Item>Participantes: {proyecto.estudiantes.length}</ListGroup.Item>
+                                                    <ListGroup.Item>Líder: {proyecto.idLider.nombres} {proyecto.idLider.apellidos}</ListGroup.Item>
                                                     <ListGroup.Item>Fecha de inicio: {proyecto.fechaInicio}</ListGroup.Item>
                                                     <ListGroup.Item>Objetivo general: {proyecto.objGeneral}</ListGroup.Item>
                                                     <ListGroup.Item>Objetivos especificos: {proyecto.objEspecificos.map((obj,index) => {

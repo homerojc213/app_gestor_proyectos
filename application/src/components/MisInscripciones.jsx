@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-
+import { useNavigate } from 'react-router-dom';
 import { Navigation } from './Navigation';
 import { AUTH_TOKEN } from '../constants';
 import { GET_INSCRIPCIONES_ESTUDIANTE } from '../Apollo/gql/getInscripcionesEstudiante';
 
 
 export const MisInscripciones = () => {
+
+    const navigate = useNavigate();
 
     const authToken = localStorage.getItem(AUTH_TOKEN) || "";
     const idEstudiante = JSON.parse(window.atob(authToken.split('.')[1])).uid || "";
@@ -37,7 +39,7 @@ export const MisInscripciones = () => {
                 {loading && <p>Cargando...</p>}
                 {error && <p>Error al cargar las inscripciones</p>}
 
-                <h3 class="mt-4">Inscripciones pendientes</h3>
+                <h3 className="mt-4">Inscripciones pendientes</h3>
 
                 {inscripcionesPendientes.length === 0  && <p>No tienes inscripciones pendientes</p>}
 
@@ -51,18 +53,19 @@ export const MisInscripciones = () => {
                     </ul>
                 }
 
-                <h3 class="mt-4">Inscripciones aceptadas</h3>
+                <h3 className="mt-4">Inscripciones aceptadas</h3>
 
                 {inscripcionesAceptadas.length === 0  && <p>No tienes inscripciones aceptadas</p>}
 
                 {inscripcionesAceptadas.length > 0 &&
 
-                <table class="table table-striped">
+                <table className="table table-striped table-responsive">
                     <thead>
                         <tr>
                             <th scope="col">Proyecto</th>
                             <th scope="col">Fecha de inicio de proyecto</th>
                             <th scope="col">Fecha de ingreso</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,7 +73,10 @@ export const MisInscripciones = () => {
                             <tr key={inscripcion.id}>
                                 <td>{inscripcion.idProyecto.nombre}</td>
                                 <td>{inscripcion.idProyecto.fechaInicio}</td>
-                                <td>{inscripcion.fechaInscripcion}</td>
+                                <td>{inscripcion.fechaIngreso}</td>
+                                <td>
+                                    <button className="btn btn-primary m-1" onClick={() => navigate(`/AvancesProyecto/${inscripcion.idProyecto.id}`)}>Ver avances del proyecto</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

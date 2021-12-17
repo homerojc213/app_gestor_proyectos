@@ -93,7 +93,9 @@ export const Proyectos = () => {
                                                 <Card.Text as = 'div' >
                                                     <br />
                                                     <ListGroup>
-                                                    <ListGroup.Item>Participantes: {proyecto.estudiantes.length}</ListGroup.Item>
+                                                    <ListGroup.Item>
+                                                            Dirigido por: {proyecto.idLider.nombres} {proyecto.idLider.apellidos}
+                                                    </ListGroup.Item>
                                                     <ListGroup.Item>Fecha de inicio: {proyecto.fechaInicio}</ListGroup.Item>
                                                     <ListGroup.Item>Objetivo general: {proyecto.objGeneral}</ListGroup.Item>
                                                     <ListGroup.Item>Objetivos especificos: {proyecto.objEspecificos.map((obj,index) => {
