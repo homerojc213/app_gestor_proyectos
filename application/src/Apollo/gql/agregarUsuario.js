@@ -10,7 +10,15 @@ const AGREGAR_USUARIO = gql `
         $rol: String!
         $estado: String!
       ) {
-          agregarUsuario(nombres: $nombres, apellidos: $apellidos, identificacion: $identificacion, correo: $correo, clave: $clave, rol: $rol, estado: $estado)
+          agregarUsuario(
+            nombres: $nombres,
+            apellidos: $apellidos,
+            identificacion: $identificacion,
+            correo: $correo,
+            clave: $clave, 
+            rol: $rol, 
+            estado: $estado
+          )
         {
           nombres
           apellidos
