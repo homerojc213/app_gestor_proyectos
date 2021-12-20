@@ -9,6 +9,7 @@ const typeDefs = `
         UsuarioPorId(id: ID!): Usuario
         Proyectos: [Proyecto]
         ProyectosPorLider(id: ID!): [Proyecto]
+        ProyectosPorEstudiante(id: ID!): [Proyecto]
         Inscripciones: [Inscripcion]
         InscripcionesPorEstudiante(id: ID!): [Inscripcion]
         InscripcionesPorProyecto(id: ID!): [Inscripcion]
