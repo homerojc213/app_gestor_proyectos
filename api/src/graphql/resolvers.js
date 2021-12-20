@@ -359,37 +359,42 @@ export const resolvers = {
         },
 
         async agregarAvance( _, { idProyecto, descripcion }, context) {  //Estudiante agrega un avance
-
-            if(context.user.auth && context.user.rol === 'Estudiante') {
-
-                let tiempoTranscurrido = Date.now();
-                let hoy = new Date(tiempoTranscurrido);
-
-                const navance = new Avance({
-                    descripcion: descripcion,
-                    fecha_avance: hoy.toLocaleString(),
-                    idProyecto: idProyecto,
-                    observaciones: []
-                });
-
-                let { _id } = await navance.save(); //Guarda el avance y a la vez obtiene el id con el que quedó en la bd
-
-                if(_id){
-
-                    let { avances } = await Proyecto.findById(idProyecto); //Obtiene los avances actuales del proyecto
-
-                    let nuevosAvances = [...avances, _id]; //Agrega el nuevo avance al arreglo de avances
-
-                    return await Proyecto.findByIdAndUpdate(
-                        idProyecto,
-                        { avances: nuevosAvances },
-                        { new: true }
-                    ).populate("avances");
+            try {
+                // console.log("no entra")
+                if(context.user.auth && (context.user.rol === 'Estudiante' || context.user.rol === 'Lider')) {
+                    console.log("esta entrando")
+                    let tiempoTranscurrido = Date.now();
+                    let hoy = new Date(tiempoTranscurrido);
+    
+                    const navance = new Avance({
+                        descripcion: descripcion,
+                        fecha_avance: hoy.toLocaleString(),
+                        idProyecto: idProyecto,
+                        observaciones: []
+                    });
+                    
+                    let { _id } = await navance.save(); //Guarda el avance y a la vez obtiene el id con el que quedó en la bd
+    
+                    if(_id){
+    
+                        let { avances } = await Proyecto.findById(idProyecto); //Obtiene los avances actuales del proyecto
+    
+                        let nuevosAvances = [...avances, _id]; //Agrega el nuevo avance al arreglo de avances
+    
+                        return await Proyecto.findByIdAndUpdate(
+                            idProyecto,
+                            { avances: nuevosAvances },
+                            { new: true }
+                        ).populate("avances");
+                    }
+    
+                }else{
+                    throw new Error('No estas autorizado');
                 }
-
-            }else{
-                throw new Error('No estas autorizado');
+            } catch (error) {
+                console.error(error);
             }
+            
 
         
             
