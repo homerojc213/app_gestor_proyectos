@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { Navigation } from './Navigation';
 import { AUTH_TOKEN } from '../constants';
-import { GET_PROYECTOS_ESTUDIANTE } from '../Apollo/gql/getProyectosEstudiante';
+import { GET_INSCRIPCIONES_ESTUDIANTE } from '../Apollo/gql/getInscripcionesEstudiante';
 
 
 export const MisProyectosEstudiante = () => {
@@ -14,21 +14,21 @@ export const MisProyectosEstudiante = () => {
     const idEstudiante = JSON.parse(window.atob(authToken.split('.')[1])).uid || "";
 
 
-    const [proyectos, setProyectos] = useState([]);
+    const [inscripciones, setInscripciones] = useState([]);
 
-    const { loading, error, data:listaProyectos } = useQuery(GET_PROYECTOS_ESTUDIANTE, {
+    const { loading, error, data:listaInscripciones } = useQuery(GET_INSCRIPCIONES_ESTUDIANTE, {
         variables: { id: idEstudiante },
     });
 
     useEffect(() => {
-        if (listaProyectos) {
-            setProyectos(listaProyectos.ProyectosPorEstudiante);
+        if (listaInscripciones) {
+            setInscripciones(listaInscripciones.InscripcionesPorEstudiante);
         }
-    } , [listaProyectos]);
+    } , [listaInscripciones]);
 
-    let proyectosPendientes = proyectos.filter(proyecto => proyecto.estadoProyecto === "En proceso");
-    let proyectosAceptados = proyectos.filter(proyecto => proyecto.estadoProyecto === "Aprobado");
-
+    
+    let proyectosAceptados = inscripciones.filter(inscripcion => inscripcion.estadoInscripcion === "Aprobado");
+    console.log(proyectosAceptados);
 
 
     return (
@@ -39,23 +39,10 @@ export const MisProyectosEstudiante = () => {
                 {loading && <p>Cargando...</p>}
                 {error && <p>Error al cargar los proyectos</p>}
 
-                <h3 className="mt-4">Proyectos pendientes</h3>
 
-                {proyectosPendientes.length === 0  && <p>No tienes proyectos pendientes</p>}
+                <h3 className="mt-4">Proyectos en los que te encuentras inscripto</h3>
 
-                {proyectosPendientes.length > 0 &&
-                    <ul class="list-group">
-                        {proyectosPendientes.map(proyecto => (
-                            <li class="list-group-item list-group-item-primary" key={proyecto.id}>
-                                <p>Proyecto: {proyecto.idProyecto.nombre}</p>
-                            </li>
-                        ))}
-                    </ul>
-                }
-
-                <h3 className="mt-4">Proyectos aceptados</h3>
-
-                {proyectosAceptados.length === 0  && <p>No tienes Proyectos aceptados</p>}
+                {proyectosAceptados.length === 0  && <p>No hay proyectos</p>}
 
                 {proyectosAceptados.length > 0 &&
 

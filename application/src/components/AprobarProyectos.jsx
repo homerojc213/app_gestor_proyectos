@@ -46,21 +46,22 @@ export const AprobarProyectos = () => {
             <Navigation />
             <div className="container text-center">
                 <div className="row mt-5">
-                    <h4>Proyectos pendientes por aprobación</h4>
+                    <h4 className='mb-3'>Proyectos pendientes por aprobación</h4>
 
                         {loading && <p>Cargando...</p>}
                         {error && <p>Error al cargar los proyectos :( </p>}
 
                         {proyectosPorAprobar.length === 0 && <><p>No hay proyectos pendientes por aprobar</p></>}
+
                         {proyectosPorAprobar.length > 0 && 
                             proyectosPorAprobar.map(proyecto => (
                                 <div className="col-md-4" key={proyecto.id}>
                                     <div className="card mb-3">
                                         <div className="card-header">
                                             <h5>{proyecto.nombre}</h5>
-                                            <img src="https://economipedia.com/wp-content/uploads/Inicio-de-un-proyecto.jpg" alt="imagen" className="img-fluid" />
                                         </div>
                                         <div className="card-body">
+                                            <p>Propuesto por: {proyecto.idLider.nombres} {proyecto.idLider.apellidos}</p>
                                             <p>Presupuesto: {proyecto.presupuesto}</p>
                                             <p>Objetivo general: {proyecto.objGeneral}</p>
                                             <p>Objetivos especificos: {proyecto.objEspecificos.forEach(objEspecifico => (

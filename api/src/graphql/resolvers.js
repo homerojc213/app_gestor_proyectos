@@ -44,13 +44,6 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             }
         },
-        ProyectosPorEstudiante: (_, args, context) => {  //Ver los proyectos de un estudiante
-            if(context.user.auth && context.user.rol === 'Estudiante'){
-                return Proyecto.find({idEstudiante: args.id});
-            }else{
-                throw new Error('No estas autorizado');
-            }
-        },
         Inscripciones: (_, args, context) => {  //Todas las inscripciones
             if(context.user.auth) {
                 return Inscripcion.find().populate('idProyecto').populate('idEstudiante');
