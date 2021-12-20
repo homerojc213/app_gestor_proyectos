@@ -74,25 +74,8 @@ export const Usuarios = () => {
                                                 }
                                                 {rol === 'Administrador' ? (
                                                     <div>
-                                                        <Button variant="outline-info">Editar</Button>{' '}
                                                     </div>
                                                 ) : ''}
-
-                                                {//el lider solo ingresa a sus proyectos y puede crear proyectos nuevos 
-                                                }
-
-                                                {/* {rol === 'Lider' ? (
-                                                    <div>
-                                                        <Button variant="outline-primary">Editar</Button>{' '}
-                                                    </div>
-                                                ) : ''}
-
-                                                {rol === 'Estudiante' ? (
-                                                    <div>
-                                                        <Button variant="outline-primary">Editar</Button>{' '}
-                                                    </div>
-                                                ) : ''} */}
-
                                             </div>
                                         </Card.Text>
                                     </Card.Body>
