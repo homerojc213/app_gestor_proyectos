@@ -120,7 +120,7 @@ export const NuevoUsuario = () => {
                     >
                     <option value="" disabled>Seleccione un estado</option>
                     <option value="Autorizado">Autorizado</option>
-                    <option value="Inactivo">Inactivo</option>
+                    <option value="Pendiente">Inactivo</option>
                     </select>
                 </div>
                 
