@@ -35,8 +35,7 @@ const typeDefs = `
         agregarAvance(idProyecto: ID!, descripcion: String!): Avance
         actualizarAvance(id: ID!, descripcion: String!): Avance
         agregarObservacion(idAvance: ID!, observacion: String!): Avance
-        eliminarAvance(id: ID!): Avance
-
+        eliminarAvance(idAvance: ID!, idProyecto: ID!): Avance
     }
 
 

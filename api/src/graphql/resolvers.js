@@ -360,9 +360,7 @@ export const resolvers = {
 
         async agregarAvance( _, { idProyecto, descripcion }, context) {  //Estudiante agrega un avance
             try {
-                // console.log("no entra")
                 if(context.user.auth && (context.user.rol === 'Estudiante' || context.user.rol === 'Lider')) {
-                    console.log("esta entrando")
                     let tiempoTranscurrido = Date.now();
                     let hoy = new Date(tiempoTranscurrido);
     
@@ -402,7 +400,7 @@ export const resolvers = {
 
         async actualizarAvance( _, { id, descripcion }, context) {   //Estudiante actualiza un avance
 
-            if(context.user.auth && context.user.rol === 'Estudiante') {
+            if(context.user.auth && (context.user.rol === 'Estudiante' || context.user.rol === 'Lider')) {
                 return await Avance.findByIdAndUpdate(id, {
                     descripcion: descripcion
                 })
@@ -412,17 +410,17 @@ export const resolvers = {
             
         },
 
-        async eliminarAvance( _, { id }){  //Estudiante elimina un avance
-            if(context.user.auth && context.user.rol === 'Estudiante') {
+        async eliminarAvance( _, { idAvance, idProyecto }, context){  //Estudiante elimina un avance
+            if(context.user.auth && (context.user.rol === 'Estudiante' || context.user.rol === 'Lider')) {
 
-                Avance.findByIdAndDelete(id);
+                await Avance.findByIdAndDelete(idAvance);
 
-                let { avances } = await Proyecto.findById(id); //Obtiene los avances actuales del proyecto
+                let { avances } = await Proyecto.findById(idProyecto); //Obtiene los avances actuales del proyecto
 
-                let nuevosAvances = avances.filter(avance => avance.toString() !== id); //Elimina el avance del arreglo de avances
+                let nuevosAvances = avances.filter(avance => avance.toString() !== idAvance); //Elimina el avance del arreglo de avances
 
                 return await Proyecto.findByIdAndUpdate(
-                    id,
+                    idProyecto,
                     { avances: nuevosAvances },
                     { new: true }
                 ).populate("avances");

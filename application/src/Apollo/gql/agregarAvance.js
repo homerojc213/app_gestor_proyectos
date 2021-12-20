@@ -9,7 +9,6 @@ const AGREGAR_AVANCE = gql`
             idProyecto: $idProyecto,
             descripcion: $descripcion
             ){
-                idProyecto
                 descripcion
             }
     }

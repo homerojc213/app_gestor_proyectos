@@ -11,16 +11,19 @@ const ModalNuevoAvance = (props) => {
 
     const { idProyecto } = useParams();
 
-    const [formState, setFormState] = useState({
-        descripcion: '',
-      });
+    // const [formState, setFormState] = useState({
+    //     descripcion: '',
+    //   });
       
     const [agregarAvance] = useMutation(AGREGAR_AVANCE , {
         variables: {
             idProyecto: idProyecto,
-            descripcion: formState.descripcion
+            descripcion: props.formState.descripcion
         },
         onCompleted: () => {
+            props.setFormState({
+                descripcion: '',
+            })
             swal('Avance creado', 'Creación Exitosa', 'success');
         },
         onError: (error) => {
@@ -31,15 +34,14 @@ const ModalNuevoAvance = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(formState.descripcion === '' ){
+        if(props.formState.descripcion === '' ){
             swal("Error", "Todos los campos son obligatorios", "error");
         }else{
-            console.log("idProyecto: ",idProyecto, " descripcion: ", formState.descripcion)
+            console.log("idProyecto: ",idProyecto, " descripcion: ", props.formState.descripcion)
             agregarAvance();
             handleClose();
         }
     };
-
     return (
         <>
             <div style={{
@@ -66,7 +68,7 @@ const ModalNuevoAvance = (props) => {
                             as="textarea"
                             placeholder="Leave a comment here"
                             style={{ height: '100px' }}
-                            onChange={e => setFormState({...formState, descripcion: e.target.value})}
+                            onChange={e => props.setFormState({...props.formState, descripcion: e.target.value})}
                         />
                     </FloatingLabel>
 

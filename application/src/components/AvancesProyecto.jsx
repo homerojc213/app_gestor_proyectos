@@ -1,20 +1,29 @@
 import { useState, useEffect } from 'react';
 import { Navigation } from './Navigation';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { AUTH_TOKEN } from '../constants'
 import { GET_AVANCES_PROYECTO } from '../Apollo/gql/getAvancesProyecto.js';
 import ModalNuevoAvance from './ModalNuevoAvance';
 import GET_PROYECTOS_LIDER from '../Apollo/gql/getProyectosLider';
+import swal from 'sweetalert';
+import { ELIMINAR_AVANCE } from '../Apollo/gql/eliminarAvance';
 
 export const AvancesProyecto = () => {
     
+
+    const [formState, setFormState] = useState({
+        descripcion: '',
+      });
+
     const { idProyecto } = useParams();
     const { loading, error, data } = useQuery(GET_AVANCES_PROYECTO, {
         variables: {
             id: idProyecto
         }
     });
+
+    
 
     console.log(data);
 
@@ -26,6 +35,30 @@ export const AvancesProyecto = () => {
         }
     }, [data]);
 
+
+
+    const [eliminarAvance] = useMutation(ELIMINAR_AVANCE);
+
+    const HandleEliminarAvance = async (idAvance) => {
+        
+        await eliminarAvance({
+            variables: {
+                idAvance: idAvance,
+                idProyecto: idProyecto
+            },
+            onCompleted: () => {
+                swal("Avance Eliminado", "El avance ha sido eliminado", "success");
+                window.location.reload()
+            },
+            onError: (error) => {
+                console.log("idAvance: ", idAvance, " idProyecto: ", idProyecto);
+                swal("Error", "El avance no ha sido eliminado", "error");
+                console.log(error)
+            }
+        });
+    }
+    
+
     return (
         <>
             <Navigation />
@@ -35,7 +68,7 @@ export const AvancesProyecto = () => {
 
                 {loading && <p>Cargando...</p>}
                 {error && <p>Error al cargar los avances del proyecto :(</p>}
-                    <ModalNuevoAvance />
+                    <ModalNuevoAvance formState={formState} setFormState={setFormState}  />
                 {avances.length === 0 && <p>No hay avances para este proyecto</p>}
             
 
@@ -57,7 +90,10 @@ export const AvancesProyecto = () => {
                                     <td>{avance.descripcion}</td>
                                     <td>{avance.observaciones ? avance.observaciones : 'Sin observaciones'}</td>
                                     <td>
-                                        <button className="btn btn-primary">Agregar observación</button>
+                                        <button className="btn btn-primary">Agregar observación</button>{" "}
+                                        <button className="btn btn-danger"
+                                        onClick={() => HandleEliminarAvance(avance.id)}
+                                        >Eliminar</button>
                                     </td>
 
                                 </tr>
