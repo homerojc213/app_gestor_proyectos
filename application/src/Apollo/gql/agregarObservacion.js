@@ -2,11 +2,11 @@ import { gql } from '@apollo/client';
 
 const AGREGAR_OBSERVACION = gql`
       mutation agregarObservacion(
-        $idAvance: ID!,
+        $idObservacion: ID!,
         $observacion: String!
         ) {
             agregarObservacion(
-            idAvance: $idAvance,
+            idObservacion: $idObservacion,
             observacion: $observacion
             ){
                 observacion

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { AUTH_TOKEN } from '../constants'
 import { GET_AVANCES_PROYECTO } from '../Apollo/gql/getAvancesProyecto.js';
+import { AGREGAR_OBSERVACION } from '../Apollo/gql/agregarObservacion.js';
 import ModalNuevoAvance from './ModalNuevoAvance';
 import GET_PROYECTOS_LIDER from '../Apollo/gql/getProyectosLider';
 import swal from 'sweetalert';
@@ -59,6 +60,27 @@ export const AvancesProyecto = () => {
     }
     
 
+    const [agregarObservacion] = useMutation(AGREGAR_OBSERVACION);
+
+    const HandleAgregarObservacion = async (idObservacion) => {
+        
+        await agregarObservacion({
+            variables: {
+                idObservacion: idObservacion
+            },
+            onCompleted: () => {
+                swal("la observacion ha sido adicionada", "la observacion ha sido adicionada", "success");
+                window.location.reload()
+            },
+            onError: (error) => {
+                console.log(" idObservacion: ", idObservacion, );
+                swal("Error", "La observacion no ha sido adicionada", "error");
+                console.log(error)
+            }
+        });
+    }
+    
+
     return (
         <>
             <Navigation />
@@ -90,7 +112,9 @@ export const AvancesProyecto = () => {
                                     <td>{avance.descripcion}</td>
                                     <td>{avance.observaciones ? avance.observaciones : 'Sin observaciones'}</td>
                                     <td>
-                                        <button className="btn btn-primary">Agregar observación</button>{" "}
+                                        <button className="btn btn-primary"
+                                        onClick={() => HandleAgregarObservacion(avance.id)}
+                                        >Agregar observación</button>{" "}
                                         <button className="btn btn-danger"
                                         onClick={() => HandleEliminarAvance(avance.id)}
                                         >Eliminar</button>

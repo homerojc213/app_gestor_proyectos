@@ -10,7 +10,7 @@ const AgregarObservacion = (props) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const { idAvance } = useParams();
+    const { idObservacion } = useParams();
 
     // const [formState, setFormState] = useState({
     //     descripcion: '',
@@ -18,7 +18,7 @@ const AgregarObservacion = (props) => {
       
     const [agregarObservacion] = useMutation(AGREGAR_OBSERVACION , {
         variables: {
-            idAvance: idAvance,
+            idObservacion: idObservacion,
             observacion: props.formState.observacion
         },
         onCompleted: () => {
@@ -38,7 +38,7 @@ const AgregarObservacion = (props) => {
         if(props.formState.observacion === '' ){
             swal("Error", "Todos los campos son obligatorios", "error");
         }else{
-            console.log("idAvance: ",idAvance, " descripcion: ", props.formState.observacion)
+            console.log("idObservacion: ",idObservacion, " descripcion: ", props.formState.observacion)
             agregarObservacion();
             handleClose();
         }
