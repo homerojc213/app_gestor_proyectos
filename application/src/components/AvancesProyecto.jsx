@@ -9,13 +9,18 @@ import ModalNuevoAvance from './ModalNuevoAvance';
 import GET_PROYECTOS_LIDER from '../Apollo/gql/getProyectosLider';
 import swal from 'sweetalert';
 import { ELIMINAR_AVANCE } from '../Apollo/gql/eliminarAvance';
+import AgregarObservacion from './AgregarObservacion';
 
 export const AvancesProyecto = () => {
-    
+
 
     const [formState, setFormState] = useState({
         descripcion: '',
-      });
+    });
+    
+    const [formStateObservaciones, setFormStateObservaciones] = useState({
+        observacion: '',
+    });
 
     const { idProyecto } = useParams();
     const { loading, error, data } = useQuery(GET_AVANCES_PROYECTO, {
@@ -24,7 +29,7 @@ export const AvancesProyecto = () => {
         }
     });
 
-    
+
 
     console.log(data);
 
@@ -41,7 +46,7 @@ export const AvancesProyecto = () => {
     const [eliminarAvance] = useMutation(ELIMINAR_AVANCE);
 
     const HandleEliminarAvance = async (idAvance) => {
-        
+
         await eliminarAvance({
             variables: {
                 idAvance: idAvance,
@@ -58,28 +63,7 @@ export const AvancesProyecto = () => {
             }
         });
     }
-    
 
-    const [agregarObservacion] = useMutation(AGREGAR_OBSERVACION);
-
-    const HandleAgregarObservacion = async (idObservacion) => {
-        
-        await agregarObservacion({
-            variables: {
-                idObservacion: idObservacion
-            },
-            onCompleted: () => {
-                swal("la observacion ha sido adicionada", "la observacion ha sido adicionada", "success");
-                window.location.reload()
-            },
-            onError: (error) => {
-                console.log(" idObservacion: ", idObservacion, );
-                swal("Error", "La observacion no ha sido adicionada", "error");
-                console.log(error)
-            }
-        });
-    }
-    
 
     return (
         <>
@@ -90,9 +74,10 @@ export const AvancesProyecto = () => {
 
                 {loading && <p>Cargando...</p>}
                 {error && <p>Error al cargar los avances del proyecto :(</p>}
-                    <ModalNuevoAvance formState={formState} setFormState={setFormState}  />
+                <ModalNuevoAvance formState={formState} setFormState={setFormState} />
+                
                 {avances.length === 0 && <p>No hay avances para este proyecto</p>}
-            
+
 
                 {avances.length > 0 &&
 
@@ -110,13 +95,14 @@ export const AvancesProyecto = () => {
                                 <tr key={avance.id}>
                                     <td>{avance.fecha_avance}</td>
                                     <td>{avance.descripcion}</td>
-                                    <td>{avance.observaciones ? avance.observaciones : 'Sin observaciones'}</td>
+                                    <td>{avance.observaciones[0] ? avance.observaciones[0].observacion : 'Sin observaciones'}</td>
                                     <td>
-                                        <button className="btn btn-primary"
-                                        onClick={() => HandleAgregarObservacion(avance.id)}
-                                        >Agregar observación</button>{" "}
+                                        {/* <button className="btn btn-primary"
+                                            onClick={() => HandleAgregarObservacion(avance.id)}
+                                        >Agregar observación</button>{" "} */}
+                                        <AgregarObservacion formStateObservaciones={formStateObservaciones} setFormStateObservaciones={setFormStateObservaciones} idAvance={avance.id} />
                                         <button className="btn btn-danger"
-                                        onClick={() => HandleEliminarAvance(avance.id)}
+                                            onClick={() => HandleEliminarAvance(avance.id)}
                                         >Eliminar</button>
                                     </td>
 

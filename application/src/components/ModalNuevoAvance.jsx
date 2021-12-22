@@ -25,6 +25,7 @@ const ModalNuevoAvance = (props) => {
                 descripcion: '',
             })
             swal('Avance creado', 'Creación Exitosa', 'success');
+            window.location.reload()
         },
         onError: (error) => {
             swal('Error', error.message, 'error');
