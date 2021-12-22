@@ -5,6 +5,7 @@ import { AUTH_TOKEN } from '../constants'
 import GET_PROYECTOS_LIDER from '../Apollo/gql/getProyectosLider'
 import { useNavigate } from 'react-router-dom';
 import { ELIMINAR_PROYECTO } from '../Apollo/gql/eliminarProyecto';
+import {TERMINAR_PROYECTO} from '../Apollo/gql/terminarProyecto';
 import swal from 'sweetalert';
 
 export const MisProyectosLider = () => {
@@ -54,7 +55,7 @@ export const MisProyectosLider = () => {
 
     const [eliminarProyecto] = useMutation(ELIMINAR_PROYECTO);
 
-    const handlerEliminarProyecto = async (id) => {
+    const handleEliminarProyecto = async (id) => {
         await eliminarProyecto({
             variables: {
                 id: id
@@ -69,6 +70,26 @@ export const MisProyectosLider = () => {
             }
         });
     }
+
+    const [terminarProyecto] = useMutation(TERMINAR_PROYECTO);
+
+    const handleTerminarProyecto = async (id) => {
+        await terminarProyecto({
+            variables: {
+                id: id
+            },
+            onCompleted: () => {
+                swal("Proyecto Terminado", "El proyecto ha sido terminado", "success");
+                setProyectos(proyectos.filter(proyecto => proyecto.id !== id));
+            },
+            onError: (error) => {
+                swal("Error", "Ha ocurrido un error", "error");
+                console.log(error)
+            }
+        });
+    }
+    
+
 
     return (
         <>
@@ -98,7 +119,8 @@ export const MisProyectosLider = () => {
                                     </div>
                                     <div className="card-footer">
                                     <button className="btn btn-primary m-1" onClick={() => navigate(`/AvancesProyecto/${proyecto.id}`)}>Ver avances del proyecto</button>
-                                    <button className="btn btn-danger m-1" onClick={() => handlerEliminarProyecto(proyecto.id)}>Eliminar proyecto</button>
+                                    <button className="btn btn-primary m-1" onClick={() => handleTerminarProyecto(proyecto.id)}>Terminar proyecto</button>
+                                    <button className="btn btn-danger m-1" onClick={() => handleEliminarProyecto(proyecto.id)}>Eliminar proyecto</button>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +145,7 @@ export const MisProyectosLider = () => {
                                         <p className="card-text">Objetivo general: {proyecto.objGeneral}</p>
                                     </div>
                                     <div className="card-footer">
-                                    <button className="btn btn-danger m-1" onClick={() => handlerEliminarProyecto(proyecto.id)}>Eliminar proyecto</button>
+                                    <button className="btn btn-danger m-1" onClick={() => handleEliminarProyecto(proyecto.id)}>Eliminar proyecto</button>
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +155,7 @@ export const MisProyectosLider = () => {
 
                 <hr />
 
-                <div className="row mt-5">
+                <div className="row mt-5 mb-5">
                     <h4>Proyectos terminados</h4>
 
                     {proyectosTerminados.length === 0 && <p>No tienes proyectos terminados</p>}
@@ -147,6 +169,7 @@ export const MisProyectosLider = () => {
                                         <p className="card-text">Objetivo general: {proyecto.objGeneral}</p>
                                         <p className="card-text">Fecha de inicio: {proyecto.fechaInicio}</p>
                                         <p className="card-text">Fecha de finalización: {proyecto.fechaFin}</p>
+
                                     </div>
                                 </div>
                             </div>

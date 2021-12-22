@@ -65,7 +65,6 @@ export const MisInscripciones = () => {
                             <th scope="col">Proyecto</th>
                             <th scope="col">Fecha de inicio de proyecto</th>
                             <th scope="col">Fecha de ingreso</th>
-                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,9 +73,6 @@ export const MisInscripciones = () => {
                                 <td>{inscripcion.idProyecto.nombre}</td>
                                 <td>{inscripcion.idProyecto.fechaInicio}</td>
                                 <td>{inscripcion.fechaIngreso}</td>
-                                <td>
-                                    <button className="btn btn-primary m-1" onClick={() => navigate(`/AvancesProyecto/${inscripcion.idProyecto.id}`)}>Ver avances del proyecto</button>
-                                </td>
                             </tr>
                         ))}
                     </tbody>

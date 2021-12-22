@@ -32,11 +32,10 @@ const typeDefs = `
         agregarInscripcion(idProyecto: ID!, idUsuario: ID!): Inscripcion!
         aprobarInscripcion(id: ID!): Inscripcion
         eliminarInscripcion(id: ID!): Inscripcion
-        agregarAvance(idProyecto: ID!, descripcion: String!): Proyecto
+        agregarAvance(idProyecto: ID!, descripcion: String!): Avance
         actualizarAvance(id: ID!, descripcion: String!): Avance
         agregarObservacion(idAvance: ID!, observacion: String!): Avance
-        eliminarAvance(id: ID!): Avance
-
+        eliminarAvance(idAvance: ID!, idProyecto: ID!): Avance
     }
 
 

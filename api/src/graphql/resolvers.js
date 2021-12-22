@@ -44,7 +44,6 @@ export const resolvers = {
                 throw new Error('No estas autorizado');
             }
         },
-
         Inscripciones: (_, args, context) => {  //Todas las inscripciones
             if(context.user.auth) {
                 return Inscripcion.find().populate('idProyecto').populate('idEstudiante');
@@ -264,7 +263,7 @@ export const resolvers = {
             let tiempoTranscurrido = Date.now();
             let hoy = new Date(tiempoTranscurrido);
 
-            if(context.user.auth && context.user.rol === 'Administrador') {
+            if(context.user.auth && (context.user.rol === 'Administrador' || context.user.rol === 'Lider')) {
                     
                 return await Proyecto.findByIdAndUpdate(id, {
                     fechaFin: hoy.toLocaleDateString(),
@@ -359,37 +358,40 @@ export const resolvers = {
         },
 
         async agregarAvance( _, { idProyecto, descripcion }, context) {  //Estudiante agrega un avance
-
-            if(context.user.auth && context.user.rol === 'Estudiante') {
-
-                let tiempoTranscurrido = Date.now();
-                let hoy = new Date(tiempoTranscurrido);
-
-                const navance = new Avance({
-                    descripcion: descripcion,
-                    fecha_avance: hoy.toLocaleString(),
-                    idProyecto: idProyecto,
-                    observaciones: []
-                });
-
-                let { _id } = await navance.save(); //Guarda el avance y a la vez obtiene el id con el que quedó en la bd
-
-                if(_id){
-
-                    let { avances } = await Proyecto.findById(idProyecto); //Obtiene los avances actuales del proyecto
-
-                    let nuevosAvances = [...avances, _id]; //Agrega el nuevo avance al arreglo de avances
-
-                    return await Proyecto.findByIdAndUpdate(
-                        idProyecto,
-                        { avances: nuevosAvances },
-                        { new: true }
-                    ).populate("avances");
+            try {
+                if(context.user.auth && (context.user.rol === 'Estudiante' || context.user.rol === 'Lider')) {
+                    let tiempoTranscurrido = Date.now();
+                    let hoy = new Date(tiempoTranscurrido);
+    
+                    const navance = new Avance({
+                        descripcion: descripcion,
+                        fecha_avance: hoy.toLocaleString(),
+                        idProyecto: idProyecto,
+                        observaciones: []
+                    });
+                    
+                    let { _id } = await navance.save(); //Guarda el avance y a la vez obtiene el id con el que quedó en la bd
+    
+                    if(_id){
+    
+                        let { avances } = await Proyecto.findById(idProyecto); //Obtiene los avances actuales del proyecto
+    
+                        let nuevosAvances = [...avances, _id]; //Agrega el nuevo avance al arreglo de avances
+    
+                        return await Proyecto.findByIdAndUpdate(
+                            idProyecto,
+                            { avances: nuevosAvances },
+                            { new: true }
+                        ).populate("avances");
+                    }
+    
+                }else{
+                    throw new Error('No estas autorizado');
                 }
-
-            }else{
-                throw new Error('No estas autorizado');
+            } catch (error) {
+                console.error(error);
             }
+            
 
         
             
@@ -397,7 +399,7 @@ export const resolvers = {
 
         async actualizarAvance( _, { id, descripcion }, context) {   //Estudiante actualiza un avance
 
-            if(context.user.auth && context.user.rol === 'Estudiante') {
+            if(context.user.auth && (context.user.rol === 'Estudiante' || context.user.rol === 'Lider')) {
                 return await Avance.findByIdAndUpdate(id, {
                     descripcion: descripcion
                 })
@@ -407,17 +409,17 @@ export const resolvers = {
             
         },
 
-        async eliminarAvance( _, { id }){  //Estudiante elimina un avance
-            if(context.user.auth && context.user.rol === 'Estudiante') {
+        async eliminarAvance( _, { idAvance, idProyecto }, context){  //Estudiante elimina un avance
+            if(context.user.auth && (context.user.rol === 'Estudiante' || context.user.rol === 'Lider')) {
 
-                Avance.findByIdAndDelete(id);
+                await Avance.findByIdAndDelete(idAvance);
 
-                let { avances } = await Proyecto.findById(id); //Obtiene los avances actuales del proyecto
+                let { avances } = await Proyecto.findById(idProyecto); //Obtiene los avances actuales del proyecto
 
-                let nuevosAvances = avances.filter(avance => avance.toString() !== id); //Elimina el avance del arreglo de avances
+                let nuevosAvances = avances.filter(avance => avance.toString() !== idAvance); //Elimina el avance del arreglo de avances
 
                 return await Proyecto.findByIdAndUpdate(
-                    id,
+                    idProyecto,
                     { avances: nuevosAvances },
                     { new: true }
                 ).populate("avances");
