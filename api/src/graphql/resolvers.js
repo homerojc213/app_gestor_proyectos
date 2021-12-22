@@ -263,7 +263,7 @@ export const resolvers = {
             let tiempoTranscurrido = Date.now();
             let hoy = new Date(tiempoTranscurrido);
 
-            if(context.user.auth && context.user.rol === 'Administrador') {
+            if(context.user.auth && (context.user.rol === 'Administrador' || context.user.rol === 'Lider')) {
                     
                 return await Proyecto.findByIdAndUpdate(id, {
                     fechaFin: hoy.toLocaleDateString(),
